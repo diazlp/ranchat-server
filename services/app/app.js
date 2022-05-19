@@ -25,7 +25,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     credentials: true,
     methods: ["GET", "POST"],
   },
@@ -57,8 +57,13 @@ app.use("/", routes);
 const ChatController = require("./controllers/ChatController");
 
 const chat = io.of("/chat").on("connection", function (socket) {
+  socket.emit("me", socket.id);
+
   ChatController.sendMessage(chat, socket);
   ChatController.fetchStranger(chat, socket);
+  ChatController.disconnected(chat, socket);
+  ChatController.videoCallRequest(chat, socket);
+  ChatController.answerCall(chat, socket);
 });
 
 app.use(errorHandler);
