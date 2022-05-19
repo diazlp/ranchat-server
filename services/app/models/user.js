@@ -56,14 +56,12 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      profilePicture: DataTypes.TEXT,
       isVerified: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
       },
       verificationCode: DataTypes.STRING,
-      city: DataTypes.STRING,
       status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

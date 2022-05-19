@@ -1,6 +1,7 @@
 const { generateToken } = require("../helpers/jwt");
 const { verifyPassword } = require("../helpers/bcrypt");
-const { User } = require("../models");
+const { User, Profile } = require("../models");
+const profile = require("../models/profile");
 
 class UserController {
   static async register(req, res, next) {
@@ -30,7 +31,6 @@ class UserController {
         email: req.body?.email,
         password: req.body?.password,
       };
-
       if (!userInputForm.email) {
         throw { name: "LoginValidationError", message: "Email is required" };
       }
@@ -77,6 +77,7 @@ class UserController {
         },
       });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
@@ -115,6 +116,89 @@ class UserController {
       }
     } catch (err) {
       next(err);
+    }
+  }
+
+  static async addProfile(req, res, next) {
+    try {
+      const { id } = req.user;
+      const {
+        profilePicture,
+        birthday,
+        address,
+        gender,
+        bio,
+        banner,
+        facebook,
+        instagram,
+        twitter,
+      } = req.body;
+
+      const userProfile = await Profile.findOne({
+        where: { UserId: id },
+      });
+      if (userProfile) {
+        await Profile.update(
+          {
+            profilePicture,
+            birthday,
+            address,
+            gender,
+            bio,
+            banner,
+            facebook,
+            instagram,
+            twitter,
+            UserId: id,
+          },
+          {
+            where: { UserId: id },
+          }
+        );
+        res.status(201).json({
+          profilePicture,
+          birthday,
+          address,
+          gender,
+          bio,
+          banner,
+          facebook,
+          instagram,
+          twitter,
+        });
+      } else {
+        const profile = await Profile.create({
+          profilePicture,
+          birthday,
+          address,
+          gender,
+          bio,
+          banner,
+          facebook,
+          instagram,
+          twitter,
+          UserId: id,
+        });
+        res.status(201).json(profile);
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async findProfile(req, res, next) {
+    try {
+      const { id } = req.user;
+      const findProfile = await Profile.findOne({
+        where: {
+          UserId: id,
+        },
+      });
+
+      res.status(200).json(findProfile);
+    } catch (error) {
+      next(error);
     }
   }
 }

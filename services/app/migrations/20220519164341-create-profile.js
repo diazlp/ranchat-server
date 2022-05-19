@@ -1,12 +1,39 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Friends", {
+    await queryInterface.createTable("Profiles", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
+      },
+      profilePicture: {
+        type: Sequelize.STRING,
+      },
+      birthday: {
+        type: Sequelize.DATEONLY,
+      },
+      address: {
+        type: Sequelize.STRING,
+      },
+      gender: {
+        type: Sequelize.STRING,
+      },
+      bio: {
+        type: Sequelize.TEXT,
+      },
+      banner: {
+        type: Sequelize.STRING,
+      },
+      facebook: {
+        type: Sequelize.STRING,
+      },
+      instagram: {
+        type: Sequelize.STRING,
+      },
+      twitter: {
+        type: Sequelize.STRING,
       },
       UserId: {
         type: Sequelize.INTEGER,
@@ -16,15 +43,6 @@ module.exports = {
         },
         onUpdate: "cascade",
         onDelete: "cascade",
-      },
-      fullName: {
-        type: Sequelize.STRING,
-      },
-      email: {
-        type: Sequelize.STRING,
-      },
-      status: {
-        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +55,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Friends');
+    await queryInterface.dropTable('Profiles');
   }
 };
