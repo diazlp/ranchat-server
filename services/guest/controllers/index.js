@@ -16,8 +16,7 @@ class GuestController {
       const response = await GuestModel.findGuestOnline();
       res.status(200).json(response);
     } catch (error) {
-      console.log("error: ", error);
-      // next(error);
+      next(error);
     }
   }
 
@@ -33,15 +32,16 @@ class GuestController {
   static async addGuest(req, res, next) {
     try {
       const response = await GuestModel.createGuest();
-      console.log("response: ", response);
       res.status(201).json(response);
     } catch (error) {
       next(error);
     }
   }
 
-  static async deleteguest(req, res, next) {
+  static async eraseGuest(req, res, next) {
     try {
+      const response = await GuestModel.deleteGuest(req.params.id);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     }
