@@ -20,17 +20,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      profilePicture: {
-        type: Sequelize.TEXT,
-      },
       isVerified: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
       },
       verificationCode: {
-        type: Sequelize.STRING,
-      },
-      city: {
         type: Sequelize.STRING,
       },
       status: {

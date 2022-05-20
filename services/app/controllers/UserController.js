@@ -1,6 +1,6 @@
 const { generateToken } = require("../helpers/jwt");
 const { verifyPassword } = require("../helpers/bcrypt");
-const { User } = require("../models");
+const { User, Profile } = require("../models");
 
 class UserController {
   static async register(req, res, next) {
@@ -9,7 +9,6 @@ class UserController {
         fullName: req.body?.fullName || null,
         email: req.body?.email || null,
         password: req.body?.password || null,
-        city: req.body?.city || "Bandung, Jawa Barat",
       };
 
       const userCreatedData = await User.create(userInputForm);
@@ -30,11 +29,11 @@ class UserController {
         email: req.body?.email,
         password: req.body?.password,
       };
+      console.log(userInputForm);
 
       if (!userInputForm.email) {
         throw { name: "LoginValidationError", message: "Email is required" };
       }
-
       if (!userInputForm.password) {
         throw { name: "LoginValidationError", message: "Password is required" };
       }
@@ -115,6 +114,89 @@ class UserController {
       }
     } catch (err) {
       next(err);
+    }
+  }
+
+  static async addProfile(req, res, next) {
+    try {
+      const { id } = req.user;
+      const {
+        profilePicture,
+        birthday,
+        address,
+        gender,
+        bio,
+        banner,
+        facebook,
+        instagram,
+        twitter,
+      } = req.body;
+
+      const userProfile = await Profile.findOne({
+        where: { UserId: id },
+      });
+      if (userProfile) {
+        await Profile.update(
+          {
+            profilePicture,
+            birthday,
+            address,
+            gender,
+            bio,
+            banner,
+            facebook,
+            instagram,
+            twitter,
+            UserId: id,
+          },
+          {
+            where: { UserId: id },
+          }
+        );
+        res.status(201).json({
+          profilePicture,
+          birthday,
+          address,
+          gender,
+          bio,
+          banner,
+          facebook,
+          instagram,
+          twitter,
+        });
+      } else {
+        const profile = await Profile.create({
+          profilePicture,
+          birthday,
+          address,
+          gender,
+          bio,
+          banner,
+          facebook,
+          instagram,
+          twitter,
+          UserId: id,
+        });
+        res.status(201).json(profile);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async findProfile(req, res, next) {
+    try {
+      const { id } = req.user;
+
+      const findProfile = await Profile.findOne({
+        where: {
+          UserId: id,
+        },
+      });
+
+      res.status(200).json(findProfile);
+    } catch (error) {
+      next(error);
     }
   }
 }

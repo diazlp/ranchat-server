@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Friend, { foreignKey: "UserId" });
+      User.hasOne(models.Profile, { foreignKey: "UserId" });
     }
   }
   User.init(
@@ -56,14 +57,12 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      profilePicture: DataTypes.TEXT,
       isVerified: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
       },
       verificationCode: DataTypes.STRING,
-      city: DataTypes.STRING,
       status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
