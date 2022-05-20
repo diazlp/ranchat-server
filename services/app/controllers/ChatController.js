@@ -12,5 +12,11 @@ module.exports = {
     socket.on("join_room", (data) => {
       socket.join(data);
     });
+
+    socket.on("disconnect", () => {
+      socket.broadcast.to(1).emit("user_leave", { user_name: "johnjoe123" });
+      // users = users.filter((u) => u.id !== socket.id);
+      // io.emit("new user", users);
+    });
   },
 };

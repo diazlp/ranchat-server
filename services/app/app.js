@@ -57,6 +57,10 @@ app.use("/", routes);
 const ChatController = require("./controllers/ChatController");
 
 const chat = io.of("/chat").on("connection", function (socket) {
+  if (socket.connected) {
+    socket.to(1).emit("receive_message", { message: "has joined chat" });
+    console.log(socket.connected);
+  }
   ChatController.sendMessage(chat, socket);
   ChatController.fetchStranger(chat, socket);
 });
