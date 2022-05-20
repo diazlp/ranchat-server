@@ -180,7 +180,6 @@ class UserController {
         res.status(201).json(profile);
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
