@@ -1,36 +1,41 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Friends', {
+    await queryInterface.createTable("Friends", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       UserId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: { tableName: "Users" },
+          key: "id",
+        },
       },
-      fullName: {
-        type: Sequelize.STRING
+      FriendId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: { tableName: "Users" },
+          key: "id",
+        },
       },
-      email: {
-        type: Sequelize.STRING
-      },
-      status: {
-        type: Sequelize.BOOLEAN
+      friendStatus: {
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Friends');
-  }
+    await queryInterface.dropTable("Friends");
+  },
 };
