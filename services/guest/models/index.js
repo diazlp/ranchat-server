@@ -7,6 +7,7 @@ class GuestModel {
     try {
       const db = getDB();
       const result = await db.collection("Guests").find().toArray();
+
       return result;
     } catch (error) {
       console.log("error: ", error);
@@ -21,6 +22,7 @@ class GuestModel {
         num += (Math.floor(Math.random() * 9) + 1).toString();
       }
       const guestName = `Guest${generateUsername("", 0, 12)}#${num}`;
+
       num = "";
       for (let i = 0; i < 8; i++) {
         num += (Math.floor(Math.random() * 9) + 1).toString();
@@ -31,6 +33,7 @@ class GuestModel {
         identifier,
       };
       const result = await db.collection("Guests").insertOne(payload);
+
       return result;
     } catch (error) {
       console.log("error: ", error);
@@ -40,7 +43,9 @@ class GuestModel {
   static async findGuest(id) {
     try {
       const db = getDB();
-      const result = await db.collection("Guests").findOne({ _id: ObjectId(id) });
+      const result = await db
+        .collection("Guests")
+        .findOne({ _id: ObjectId(id) });
       console.log("result: ", result);
       return result;
     } catch (error) {
@@ -51,7 +56,9 @@ class GuestModel {
   static async deleteGuest(id) {
     try {
       const db = getDB();
-      const result = await db.collection("Guests").deleteOne({ _id: ObjectId(id) });
+      const result = await db
+        .collection("Guests")
+        .deleteOne({ _id: ObjectId(id) });
       return result;
     } catch (error) {
       console.log("error: ", error);

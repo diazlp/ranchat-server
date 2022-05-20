@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const GuestController = require("../controllers");
 
-router.get("/", GuestController.findGuests);
-router.post("/addGuest", GuestController.addGuest);
-router.get("/:id", GuestController.findGuestById);
-router.delete("/:id", GuestController.eraseGuest);
+const guestRoutes = require("./guestRoutes");
+
+router.use("/guest", guestRoutes);
 
 module.exports = router;
