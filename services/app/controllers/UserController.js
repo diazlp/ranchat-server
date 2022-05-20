@@ -69,8 +69,6 @@ class UserController {
           id: matchingUser.id,
           fullName: matchingUser.fullName,
           email: matchingUser.email,
-          city: matchingUser.city,
-          profilePicture: matchingUser.profilePicture,
           isVerified: matchingUser.isVerified,
           status: matchingUser.status,
         },
@@ -120,6 +118,7 @@ class UserController {
   static async addProfile(req, res, next) {
     try {
       const { id } = req.user;
+
       const {
         profilePicture,
         birthday,
@@ -135,6 +134,7 @@ class UserController {
       const userProfile = await Profile.findOne({
         where: { UserId: id },
       });
+
       if (userProfile) {
         await Profile.update(
           {
@@ -177,6 +177,7 @@ class UserController {
           twitter,
           UserId: id,
         });
+
         res.status(201).json(profile);
       }
     } catch (error) {

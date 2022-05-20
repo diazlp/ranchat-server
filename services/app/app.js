@@ -40,7 +40,7 @@ app.use("/", routes);
 //     socket.broadcast.emit("receive_message", data);
 //   });
 // });
-//////////
+////////
 
 /* INI BUAT JOIN ROOM DAN SEND MESSAGE KE PRIVATE ROOM */
 // io.on("connection", (socket) => {
@@ -54,7 +54,6 @@ app.use("/", routes);
 // });
 
 const ChatController = require("./controllers/ChatController");
-
 const chat = io.of("/chat").on("connection", function (socket) {
   socket.emit("me", socket.id);
 

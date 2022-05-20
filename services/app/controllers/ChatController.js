@@ -21,6 +21,7 @@ module.exports = {
 
       // await delete guest
       // await update user status
+      // await delete room/delete guest from room
 
       //   console.log(data);
       socket.emit("receive_message", "call has been ended");
