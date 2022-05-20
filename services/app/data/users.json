@@ -5,7 +5,8 @@
     "password": "admin",
     "isVerified": true,
     "verificationCode": "d0847",
-    "status": false
+    "status": false,
+    "isPremium": false
   },
   {
     "fullName": "Fitrah Ananda",
@@ -13,7 +14,8 @@
     "password": "admin",
     "isVerified": true,
     "verificationCode": "bdf70",
-    "status": false
+    "status": false,
+    "isPremium": false
   },
   {
     "fullName": "Fajar Mersiera",
@@ -21,7 +23,8 @@
     "password": "admin",
     "isVerified": true,
     "verificationCode": "9ded1",
-    "status": false
+    "status": false,
+    "isPremium": false
   },
   {
     "fullName": "Kevin Tandiono",
@@ -29,7 +32,8 @@
     "password": "admin",
     "isVerified": true,
     "verificationCode": "123f7",
-    "status": false
+    "status": false,
+    "isPremium": false
   },
   {
     "fullName": "Diaz Linggaputra",
@@ -37,6 +41,7 @@
     "password": "admin",
     "isVerified": true,
     "verificationCode": "4a596",
-    "status": false
+    "status": false,
+    "isPremium": false
   }
 ]

@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Friend, { foreignKey: "UserId" });
       User.hasOne(models.Profile, { foreignKey: "UserId" });
+      User.hasOne(models.Payment, { foreignKey: "UserId" });
     }
   }
   User.init(
@@ -64,6 +65,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       verificationCode: DataTypes.STRING,
       status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      isPremium: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,

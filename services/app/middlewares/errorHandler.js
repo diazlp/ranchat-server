@@ -35,6 +35,12 @@ module.exports = (err, req, res, next) => {
       });
       break;
 
+    case "EmailNotVerified":
+      res.status(403).json({
+        message: err.message,
+      });
+      break;
+
     default:
       res.status(500).json({
         message: "Internal Server Error",
