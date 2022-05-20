@@ -1,7 +1,6 @@
 const { generateToken } = require("../helpers/jwt");
 const { verifyPassword } = require("../helpers/bcrypt");
 const { User, Profile } = require("../models");
-const profile = require("../models/profile");
 
 class UserController {
   static async register(req, res, next) {
@@ -77,7 +76,7 @@ class UserController {
         },
       });
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       next(err);
     }
   }
@@ -190,6 +189,7 @@ class UserController {
   static async findProfile(req, res, next) {
     try {
       const { id } = req.user;
+
       const findProfile = await Profile.findOne({
         where: {
           UserId: id,
