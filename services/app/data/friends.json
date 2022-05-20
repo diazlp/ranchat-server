@@ -5,6 +5,16 @@
       "friendStatus": false
     },
     {
+        "UserId": 4,
+        "FriendId": 2,
+        "friendStatus": false
+    },
+    {
+        "UserId": 5,
+        "FriendId": 2,
+        "friendStatus": false
+      },
+    {
         "UserId": 2,
         "FriendId": 3,
         "friendStatus": false
@@ -20,13 +30,23 @@
         "friendStatus": false
     },
     {
-        "UserId": 1,
-        "FriendId": 5,
-        "friendStatus": false
-    },
-    {
         "UserId": 4,
         "FriendId": 1,
-        "friendStatus": false
+        "friendStatus": true
+    },
+    {
+        "UserId": 1,
+        "FriendId": 4,
+        "friendStatus": true
+    },
+    {
+        "UserId": 5,
+        "FriendId": 1,
+        "friendStatus": true
+    },
+    {
+        "UserId": 1,
+        "FriendId": 5,
+        "friendStatus": true
     }
 ]

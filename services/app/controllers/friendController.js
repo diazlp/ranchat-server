@@ -4,6 +4,7 @@ class FriendController {
     try {
       const { id } = req.user;
       const { friendId } = req.body;
+      //check if friendId is falsy
       if (!friendId) {
         throw {
           name: "CannotAddGuestAccount",
@@ -23,9 +24,11 @@ class FriendController {
         where: {
           UserId: friendId,
           FriendId: id,
+          friendStatus: false,
         },
       });
       if (findFriendRequest) {
+        //update friend that has requested before
         await Friend.update(
           { friendStatus: true },
           {
@@ -35,21 +38,41 @@ class FriendController {
             },
           }
         );
-      } else {
-        //if no error & no duplicate friend request create friend request
-        const newFriend = await Friend.create({
+
+        //create new row to add friend to friend list
+        await Friend.create({
           UserId: id,
           FriendId: friendId,
-          friendStatus: "false",
+          friendStatus: true,
         });
-
-        // res status not complete //
-        res.status(200).json({
-          friend: {
-            id: checkedUser.id,
+      } else {
+        //check if user has made same request before
+        const myRequest = await Friend.findOne({
+          where: {
+            UserId: id,
+            FriendId: friendId,
           },
         });
+        if (myRequest) {
+          throw {
+            name: "CannotDuplicateFriendRequest",
+            message: "Duplicate Friend Request",
+          };
+        } else {
+          //if no error & no duplicate friend request from each side
+          await Friend.create({
+            UserId: id,
+            FriendId: friendId,
+            friendStatus: false,
+          });
+        }
       }
+      // res status if success (not complete)//
+      res.status(200).json({
+        friend: {
+          id: checkedUser.id,
+        },
+      });
     } catch (err) {
       next(err);
     }
@@ -57,7 +80,7 @@ class FriendController {
 
   static async friendList(req, res, next) {
     try {
-      const { id } = req.body; // req.user
+      const { id } = req.user;
       const findFriends = await Friend.findAll({
         where: {
           UserId: id,
@@ -66,6 +89,7 @@ class FriendController {
         include: [
           {
             model: User,
+            as: "FriendData",
             attributes: {
               exclude: ["createdAt", "updatedAt", "password"],
             },
@@ -91,7 +115,7 @@ class FriendController {
 
   static async friendRequestList(req, res, next) {
     try {
-      const { id } = req.body;
+      const { id } = req.user;
       const findFriendRequest = await Friend.findAll({
         where: {
           FriendId: id,
@@ -100,23 +124,99 @@ class FriendController {
         include: [
           {
             model: User,
-            attributes: {
-              exclude: ["createdAt", "updatedAt", "password"],
-            },
-            // include: [
-            //   {
-            //     model: Profile,
-            //     attributes: {
-            //       exclude: ["createdAt", "updatedAt"],
-            //     },
-            //   },
-            // ],
+            as: "userData",
           },
         ],
       });
 
       res.status(200).json({
-        friendList: findFriendRequest,
+        friendRequestList: findFriendRequest,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async acceptFriendRequest(req, res, next) {
+    try {
+      const { id } = req.user;
+      const { friendId } = req.params;
+      //update from friend request
+      await Friend.update(
+        { friendStatus: true },
+        {
+          where: {
+            UserId: friendId,
+            FriendId: id,
+            friendStatus: false,
+          },
+        }
+      );
+
+      //create new row to add in friend list
+      await Friend.create({
+        UserId: id,
+        FriendId: friendId,
+        friendStatus: true,
+      });
+
+      // res status not complete
+      res.status(200).json({
+        message: "Success Accept Friend Request",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async rejectFriendRequest(req, res, next) {
+    try {
+      const { id } = req.user;
+      const { friendId } = req.params;
+
+      //destroy friend request from user2
+      await Friend.destroy({
+        where: {
+          UserId: friendId,
+          FriendId: id,
+          friendStatus: false,
+        },
+      });
+
+      // res status not complete
+      res.status(200).json({
+        message: "Success Reject Friend Request",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async deleteFriend(req, res, next) {
+    try {
+      const { id } = req.user;
+      const { friendId } = req.params;
+      //destroy user relation
+      await Friend.destroy({
+        where: {
+          UserId: id,
+          FriendId: friendId,
+          friendStatus: true,
+        },
+      });
+
+      //destroy friend(user2) relation
+      await Friend.destroy({
+        where: {
+          UserId: friendId,
+          FriendId: id,
+          friendStatus: true,
+        },
+      });
+
+      // res status not complete
+      res.status(200).json({
+        message: "Success Delete Friend",
       });
     } catch (err) {
       next(err);
