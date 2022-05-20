@@ -43,9 +43,7 @@ class GuestModel {
   static async findGuest(id) {
     try {
       const db = getDB();
-      const result = await db
-        .collection("Guests")
-        .findOne({ _id: ObjectId(id) });
+      const result = await db.collection("Guests").findOne({ _id: ObjectId(id) });
       console.log("result: ", result);
       return result;
     } catch (error) {
@@ -56,9 +54,47 @@ class GuestModel {
   static async deleteGuest(id) {
     try {
       const db = getDB();
-      const result = await db
-        .collection("Guests")
-        .deleteOne({ _id: ObjectId(id) });
+      const result = await db.collection("Guests").deleteOne({ _id: ObjectId(id) });
+      return result;
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
+  static async findRoom() {
+    try {
+      const db = getDB();
+      const result = await db.collection("Rooms").find().toArray();
+      return result;
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
+  static async createRoom(payload) {
+    try {
+      const db = getDB();
+      const result = await db.collection("Rooms").insertOne(payload);
+      return result;
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
+  static async connectingGuest({ roomId, guestSocketId }) {
+    try {
+      const db = getDB();
+      const result = await db.collection("Rooms").updateOne({ _id: ObjectId(roomId) }, { $set: { guestCalled: guestSocketId } });
+      return result;
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  }
+
+  static async deleteRoom(id) {
+    try {
+      const db = getDB();
+      const result = await db.collection("Rooms").deleteOne({ _id: ObjectId(id) });
       return result;
     } catch (error) {
       console.log("error: ", error);

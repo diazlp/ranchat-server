@@ -9,7 +9,7 @@ async function run() {
     await client.connect();
     const db = client.db("ranchat");
 
-    const guestCollection = db.collection("guests");
+    const guestCollection = db.collection("Guests");
     const option = { ordered: true };
 
     await guestCollection.insertMany(guestData, option);
