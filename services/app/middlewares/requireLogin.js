@@ -30,6 +30,7 @@ module.exports = async (req, res, next) => {
       verificationStatus: userAuthenticated.isVerified,
       verificationCode: userAuthenticated.verificationCode.toLowerCase(),
       status: userAuthenticated.status,
+      paymentStatus: userAuthenticated.isPremium,
     };
 
     console.log(req.user, " <<<< ini req.user loh");
