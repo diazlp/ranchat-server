@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Profile.init(
     {
-      profilePicture: DataTypes.STRING,
+      profilePicture: DataTypes.TEXT,
       birthday: DataTypes.DATEONLY,
       address: DataTypes.STRING,
       gender: DataTypes.STRING,
       bio: DataTypes.TEXT,
-      banner: DataTypes.STRING,
+      banner: DataTypes.TEXT,
       facebook: DataTypes.STRING,
       instagram: DataTypes.STRING,
       twitter: DataTypes.STRING,

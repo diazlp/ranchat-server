@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       profilePicture: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       birthday: {
         type: Sequelize.DATEONLY,
@@ -24,7 +24,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       banner: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       facebook: {
         type: Sequelize.STRING,
