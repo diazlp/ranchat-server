@@ -1,7 +1,6 @@
 const { generateToken } = require("../helpers/jwt");
 const { verifyPassword } = require("../helpers/bcrypt");
 const { User, Profile } = require("../models");
-const profile = require("../models/profile");
 
 class UserController {
   static async register(req, res, next) {
@@ -10,7 +9,6 @@ class UserController {
         fullName: req.body?.fullName || null,
         email: req.body?.email || null,
         password: req.body?.password || null,
-        city: req.body?.city || "Bandung, Jawa Barat",
       };
 
       const userCreatedData = await User.create(userInputForm);
@@ -31,10 +29,11 @@ class UserController {
         email: req.body?.email,
         password: req.body?.password,
       };
+      console.log(userInputForm);
+
       if (!userInputForm.email) {
         throw { name: "LoginValidationError", message: "Email is required" };
       }
-
       if (!userInputForm.password) {
         throw { name: "LoginValidationError", message: "Password is required" };
       }
@@ -77,7 +76,6 @@ class UserController {
         },
       });
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
