@@ -187,6 +187,7 @@ class UserController {
   static async findProfile(req, res, next) {
     try {
       const { id } = req.user;
+
       const findProfile = await Profile.findOne({
         where: {
           UserId: id,
