@@ -29,7 +29,6 @@ class UserController {
         email: req.body?.email,
         password: req.body?.password,
       };
-      console.log(userInputForm);
 
       if (!userInputForm.email) {
         throw { name: "LoginValidationError", message: "Email is required" };

@@ -2,6 +2,11 @@
  * npx sequelize-cli model:generate --name User --attributes fullName:string,email:string,password:string,profilePicture:string,isVerified:boolean,verificationCode:string,city:string,status:boolean
  * npx sequelize-cli model:generate --name Friend --attributes UserId:integer,FriendId:integer,friendStatus:boolean
  * npx sequelize-cli model:generate --name Payment --attributes UserId:integer,checkoutDate:date
+ *
+ * TO CREATE A TEST DATABASE RUN THE FOLLOWING
+ * npx sequelize-cli db:create --env=test
+ * npx sequelize-cli db:migrate --env=test
+ *
  */
 
 if (process.env.NODE_ENV !== "production") {
@@ -67,4 +72,4 @@ io.on("connection", (socket) => {
 
 app.use(errorHandler);
 
-module.exports = { server };
+module.exports = { app, server };
