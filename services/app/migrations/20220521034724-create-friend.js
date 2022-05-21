@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Friends", {
@@ -11,19 +11,18 @@ module.exports = {
       UserId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Users",
+          model: { tableName: "Users" },
           key: "id",
         },
-        onUpdate: "cascade",
-        onDelete: "cascade",
       },
-      fullName: {
-        type: Sequelize.STRING,
+      FriendId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: { tableName: "Users" },
+          key: "id",
+        },
       },
-      email: {
-        type: Sequelize.STRING,
-      },
-      status: {
+      friendStatus: {
         type: Sequelize.BOOLEAN,
       },
       createdAt: {
@@ -37,6 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Friends');
-  }
+    await queryInterface.dropTable("Friends");
+  },
 };

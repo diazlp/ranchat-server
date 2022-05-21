@@ -1,8 +1,9 @@
 /**
  * npx sequelize-cli model:generate --name User --attributes fullName:string,email:string,password:string,profilePicture:string,isVerified:boolean,verificationCode:string,city:string,status:boolean
- * npx sequelize-cli model:generate --name Friend --attributes UserId:integer,fullName:string,email:string,status:boolean
+ * npx sequelize-cli model:generate --name Friend --attributes UserId:integer,FriendId:integer,friendStatus:boolean
  * npx sequelize-cli model:generate --name Payment --attributes UserId:integer,checkoutDate:date
  */
+
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
