@@ -6,6 +6,8 @@ class GuestModel {
   static async findGuestOnline() {
     try {
       const db = getDB();
+      console.log(db, "<<<<");
+
       const result = await db.collection("Guests").find().toArray();
 
       return result;
@@ -43,7 +45,9 @@ class GuestModel {
   static async findGuest(id) {
     try {
       const db = getDB();
-      const result = await db.collection("Guests").findOne({ _id: ObjectId(id) });
+      const result = await db
+        .collection("Guests")
+        .findOne({ _id: ObjectId(id) });
       console.log("result: ", result);
       return result;
     } catch (error) {
@@ -54,7 +58,9 @@ class GuestModel {
   static async deleteGuest(id) {
     try {
       const db = getDB();
-      const result = await db.collection("Guests").deleteOne({ _id: ObjectId(id) });
+      const result = await db
+        .collection("Guests")
+        .deleteOne({ _id: ObjectId(id) });
       return result;
     } catch (error) {
       console.log("error: ", error);
@@ -84,7 +90,12 @@ class GuestModel {
   static async connectingGuest({ roomId, guestSocketId }) {
     try {
       const db = getDB();
-      const result = await db.collection("Rooms").updateOne({ _id: ObjectId(roomId) }, { $set: { guestCalled: guestSocketId } });
+      const result = await db
+        .collection("Rooms")
+        .updateOne(
+          { _id: ObjectId(roomId) },
+          { $set: { guestCalled: guestSocketId } }
+        );
       return result;
     } catch (error) {
       console.log("error: ", error);
@@ -94,7 +105,9 @@ class GuestModel {
   static async deleteRoom(id) {
     try {
       const db = getDB();
-      const result = await db.collection("Rooms").deleteOne({ _id: ObjectId(id) });
+      const result = await db
+        .collection("Rooms")
+        .deleteOne({ _id: ObjectId(id) });
       return result;
     } catch (error) {
       console.log("error: ", error);

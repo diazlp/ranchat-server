@@ -36,11 +36,11 @@ const routes = require("./routes");
 app.use("/", routes);
 
 /* INI BUAT BROADCAST KE SELURUH USER */
-// io.on("connection", (socket) => {
-//   socket.on("send_message", (data) => {
-//     socket.broadcast.emit("receive_message", data);
-//   });
-// });
+io.on("connection", (socket) => {
+  socket.on("send_message", (data) => {
+    socket.broadcast.emit("receive_message", data);
+  });
+});
 ////////
 
 /* INI BUAT JOIN ROOM DAN SEND MESSAGE KE PRIVATE ROOM */
@@ -54,16 +54,16 @@ app.use("/", routes);
 //   });
 // });
 
-const ChatController = require("./controllers/ChatController");
-const chat = io.of("/chat").on("connection", function (socket) {
-  socket.emit("me", socket.id);
+// const ChatController = require("./controllers/ChatController");
+// const chat = io.of("/chat").on("connection", function (socket) {
+//   socket.emit("me", socket.id);
 
-  ChatController.sendMessage(chat, socket);
-  ChatController.fetchStranger(chat, socket);
-  ChatController.disconnected(chat, socket);
-  ChatController.videoCallRequest(chat, socket);
-  ChatController.answerCall(chat, socket);
-});
+//   ChatController.sendMessage(chat, socket);
+//   ChatController.fetchStranger(chat, socket);
+//   ChatController.disconnected(chat, socket);
+//   ChatController.videoCallRequest(chat, socket);
+//   ChatController.answerCall(chat, socket);
+// });
 
 app.use(errorHandler);
 

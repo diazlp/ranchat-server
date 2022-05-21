@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const GuestController = require("../controllers/guestController");
+const GuestController = require("../controllers/GuestController");
 
 router.get("/", GuestController.findGuests);
 router.post("/addGuest", GuestController.addGuest);
