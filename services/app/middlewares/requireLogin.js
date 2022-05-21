@@ -33,8 +33,6 @@ module.exports = async (req, res, next) => {
       paymentStatus: userAuthenticated.isPremium,
     };
 
-    console.log(req.user, " <<<< ini req.user loh");
-
     next();
   } catch (err) {
     next(err);

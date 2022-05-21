@@ -23,6 +23,21 @@ module.exports = (err, req, res, next) => {
       });
       break;
 
+    /* FRIENDS API ERROR SPECIFIC */
+    case "UserNotFound":
+      res.status(404).json({
+        message: err.message,
+      });
+      break;
+
+    case "CannotDuplicateFriendRequest":
+      res.status(400).json({
+        message: err.message,
+      });
+      break;
+
+    ////
+
     case "JsonWebTokenError":
       res.status(401).json({
         message: "Invalid token",

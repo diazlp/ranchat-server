@@ -68,7 +68,7 @@ class FriendController {
         }
       }
       // res status if success (not complete)//
-      res.status(200).json({
+      res.status(201).json({
         friend: {
           id: checkedUser.id,
         },
@@ -125,6 +125,9 @@ class FriendController {
           {
             model: User,
             as: "userData",
+            attributes: {
+              exclude: ["password", "verificationCode", "isVerified"],
+            },
           },
         ],
       });
@@ -141,6 +144,7 @@ class FriendController {
     try {
       const { id } = req.user;
       const { friendId } = req.params;
+
       //update from friend request
       await Friend.update(
         { friendStatus: true },
