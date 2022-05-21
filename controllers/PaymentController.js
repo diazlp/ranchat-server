@@ -53,7 +53,9 @@ class PaymentController {
 
       const transaction = await snap.createTransaction(parameter);
 
-      const userHasPaid = await Payment.findOne({
+      console.log(transaction, "ini transaction ya jing");
+
+      await Payment.findOne({
         where: {
           UserId: req.user?.id,
         },
