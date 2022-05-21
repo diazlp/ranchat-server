@@ -1,6 +1,10 @@
 "use strict";
 const { Model } = require("sequelize");
 
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const content = require("../services/sendgrid/template");
+
 const { generateHashPassword } = require("../helpers/bcrypt");
 const { axiosRandomize } = require("../helpers/axios");
 
@@ -15,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Friend, { foreignKey: "UserId" });
       User.hasOne(models.Profile, { foreignKey: "UserId" });
+      User.hasOne(models.Payment, { foreignKey: "UserId" });
     }
   }
   User.init(
@@ -68,6 +73,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
+      isPremium: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
@@ -91,6 +101,19 @@ module.exports = (sequelize, DataTypes) => {
       instance.profilePicture =
         "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80";
     }
+  });
+  User.afterCreate(async (instance, options) => {
+    /* VERIFICATION MAIL WITH TWILIO SENDGRID */
+    const sendgridMsg = {
+      to: instance.email,
+      from: "diazlinggaputra@gmail.com",
+      subject: "RanChat Email Verification",
+      html: content(
+        instance.fullName.trim().split(" ")[0],
+        instance.verificationCode
+      ),
+    };
+    await sgMail.send(sendgridMsg);
   });
   return User;
 };

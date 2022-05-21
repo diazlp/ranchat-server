@@ -27,12 +27,13 @@ module.exports = async (req, res, next) => {
       id: userAuthenticated.id,
       fullName: userAuthenticated.fullName,
       email: userAuthenticated.email,
-      city: userAuthenticated.city,
-      imageUrl: userAuthenticated.profilePicture,
       verificationStatus: userAuthenticated.isVerified,
       verificationCode: userAuthenticated.verificationCode.toLowerCase(),
       status: userAuthenticated.status,
+      paymentStatus: userAuthenticated.isPremium,
     };
+
+    console.log(req.user, " <<<< ini req.user loh");
 
     next();
   } catch (err) {

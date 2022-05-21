@@ -358,9 +358,68 @@ _200 - Created_
 
 ---
 
-### Global Error
+## 3. Payment API
+
+1.  **Create User payment history**
+
+`POST /payment`
+
+**_Description_**
+
+- Create new User Payment
+
+**_Request_**
+
+- **Header**
+
+```json
+{
+	"access_token": <your access token>
+}
+```
 
 **_Response_**
+
+_200 - OK_
+
+- **Body**
+
+```json
+{
+	"token": <Midtrans  payment  gateway  token>,
+	"redirect_url": <Midtrans  payment  gateway  redirect  url>,
+}
+```
+
+_403 - Forbidden_
+
+- **Body**
+
+```json
+{
+  "message": "Your email is not verified"
+}
+```
+
+---
+
+### Global Error
+
+---
+
+**_Response_**
+
+_401 - Unauthorized_
+
+- **Body**
+
+```json
+{
+  "message": "Invalid token"
+}
+```
+
+---
 
 _500 - Internal Server Error_
 
