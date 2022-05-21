@@ -51,17 +51,26 @@ class GuestController {
       const { guestSocketId } = req.body;
       const findRooms = await GuestModel.findRoom();
       if (!findRooms.length) {
-        await GuestModel.createRoom({ guestCaller: guestSocketId, guestCalled: null });
+        await GuestModel.createRoom({
+          guestCaller: guestSocketId,
+          guestCalled: null,
+        });
       } else {
         let response;
         let code;
         for (const room of findRooms) {
           if (!room.guestCalled) {
-            response = await GuestModel.connectingGuest({ roomId: room._id, guestSocketId });
+            response = await GuestModel.connectingGuest({
+              roomId: room._id,
+              guestSocketId,
+            });
             code = 200;
             break;
           } else {
-            response = await GuestModel.createRoom({ guestCaller: guestSocketId, guestCalled: null });
+            response = await GuestModel.createRoom({
+              guestCaller: guestSocketId,
+              guestCalled: null,
+            });
             code = 201;
           }
         }
@@ -75,7 +84,6 @@ class GuestController {
 
   static async delRoom(req, res, next) {
     try {
-      console.log("masuk");
       const response = await GuestModel.deleteRoom(req.params.id);
       res.status(200).json(response);
     } catch (error) {

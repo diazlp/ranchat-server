@@ -4,13 +4,15 @@
 
 1. **Create a new guest on application connect**
 
-`POST /guest/addGuest`
+`POST guest/addGuest`
 
 **_Description_**
 
 - Registering new **guest** to _mongoDB_
 
 **_Response_**
+
+- **Body**
 
 _201 - Created_
 
@@ -32,6 +34,8 @@ _201 - Created_
 - Fetch all available **guest** from _mongoDB_
 
 **_Response_**
+
+- **Body**
 
 _200 - OK_
 
@@ -58,6 +62,8 @@ _200 - OK_
 
 **_Response_**
 
+- **Body**
+
 _200 - OK_
 
 ```json
@@ -79,6 +85,103 @@ _200 - OK_
 - Delete a **guest** from _mongoDB_
 
 **_Response_**
+
+- **Body**
+
+_200 - OK_
+
+```json
+{
+  "acknowledged": true,
+  "deleteCount": 1
+}
+```
+
+---
+
+### 5,6,7 is unfinished and need to be reworked when _wiring_
+
+5. **Find a Room with one empty seats**
+
+`GET /guest/randomRoom`
+
+**_Description_**
+
+- Fetch a room for guest to enter
+
+**_Response_**
+
+- **Body**
+- _200 - OK_
+
+```json
+{
+	{
+		"_id": String,
+		"guestCaller": String,
+		"guestCalled": String
+	}
+}
+```
+
+---
+
+6. **Create a new guest room**
+
+`POST /guest/randomRoom`
+
+**_Description_**
+
+- Create a room for guest if no available room on the current time
+
+**_Request_**
+
+- **Body**
+
+```json
+{
+	"guestSocketId": String
+}
+```
+
+**_Response_**
+
+- **Body**
+
+_200 - OK_
+
+```json
+{
+  "acknowledged": true,
+  "modifiedCount": 0,
+  "upserted": null,
+  "upsertedCount": 0,
+  "matchedCount": 1
+}
+```
+
+_200 - OK_
+
+```json
+{
+  "acknowledged": true,
+  "deleteCount": 1
+}
+```
+
+---
+
+7. **Delete an empty room**
+
+`DELETE /guest/randomRoom/:roomId`
+
+**_Description_**
+
+- Delete a room if a guest hang-up or disconnected
+
+**_Response_**
+
+- **Body**
 
 _200 - OK_
 
@@ -358,7 +461,270 @@ _200 - Created_
 
 ---
 
-## 3. Payment API
+## 3. Friends API
+
+1.  **Fetch all current user Friends**
+
+`GET /friends`
+
+**_Description_**
+
+- Fetching all User Friends
+
+**_Request_**
+
+- **Header**
+
+```json
+{
+	"access_token": <your access token>
+}
+```
+
+**_Response_**
+
+_200 - OK_
+
+- **Body**
+
+```json
+{
+ "friendList": [
+	 {
+		 "id": Integer,
+		 "UserId": Integer,
+		 "FriendId": Integer,
+		 "friendStatus": Boolean,
+		 "createdAt": Date,
+		 "updatedAt": Date,
+		 "FriendData": {
+			 "id": Integer,
+			 "fullName": String,
+			 "email": String,
+			 "isVerified": Boolean,
+			 "verificationCode": String,
+			 "status": Boolean,
+			 "isPremium": Boolean
+		 }
+	 },
+	 ...
+ ]
+}
+```
+
+---
+
+2.  **Send a Friend Request**
+
+`POST /friends`
+
+**_Description_**
+
+- Send a friend request
+
+**_Request_**
+
+- **Header**
+
+```json
+{
+	"access_token": <your access token>
+}
+```
+
+- **Body**
+
+```json
+{
+	"friendId": Integer
+}
+```
+
+**_Response_**
+
+_201 - Created_
+
+- **Body**
+
+```json
+{
+	 "friend": {
+		 "id": Integer
+	 }
+}
+```
+
+_401 - Bad Request_
+
+- **Body**
+
+```json
+{
+  "message": "Duplicate friend request"
+}
+```
+
+_404- Not Found_
+
+- **Body**
+
+```json
+{
+  "message": "User Not Found"
+}
+```
+
+---
+
+3.  **Fetch all Friend Request**
+
+`GET /friends/request`
+
+**_Description_**
+
+- Fetch all Friend Request of current user
+
+**_Request_**
+
+- **Header**
+
+```json
+{
+	"access_token": <your access token>
+}
+```
+
+**_Response_**
+
+200 - OK\_
+
+- **Body**
+
+```json
+{
+	 "friendRequestList": [
+		 {
+			 "id": Integer,
+			 "UserId": Integer,
+			 "FriendId": Integer,
+			 "friendStatus": false,
+			 "createdAt": Date,
+			 "updatedAt": Date,
+			 "userData": {
+				 "id": Integer,
+				 "fullName": String,
+				 "email": String,
+				 "password": String,
+				 "status": Boolean,
+				 "isPremium": Boolean,
+				 "createdAt": Date,
+				 "updatedAt": Date
+			 }
+		 },
+		 ...
+	 ]
+}
+```
+
+---
+
+4.  **Accepting Specific Friend Request**
+
+`PATCH /friends/:friendId`
+
+**_Description_**
+
+- Accepting specific friend request
+
+**_Request_**
+
+- **Header**
+
+```json
+{
+	"access_token": <your access token>
+}
+```
+
+**_Response_**
+
+200 - OK\_
+
+- **Body**
+
+```json
+{
+  "message": "Success Accept Friend Request"
+}
+```
+
+---
+
+5.  **Rejecting Specific Friend Request**
+
+`DELETE /friends/request/:friendId`
+
+**_Description_**
+
+- Rejecting a specific friend request
+
+**_Request_**
+
+- **Header**
+
+```json
+{
+	"access_token": <your access token>
+}
+```
+
+**_Response_**
+
+200 - OK\_
+
+- **Body**
+
+```json
+{
+  "message": "Success Reject Friend Request"
+}
+```
+
+---
+
+6.  **Delete an existing friend**
+
+`DELETE /:friendId`
+
+**_Description_**
+
+- Delete a Specific Friend
+
+**_Request_**
+
+- **Header**
+
+```json
+{
+	"access_token": <your access token>
+}
+```
+
+**_Response_**
+
+200 - OK\_
+
+- **Body**
+
+```json
+{
+  "message": "Success Delete Friend"
+}
+```
+
+---
+
+## 4. Payment API
 
 1.  **Create User payment history**
 
@@ -386,8 +752,8 @@ _200 - OK_
 
 ```json
 {
-	"token": <Midtrans  payment  gateway  token>,
-	"redirect_url": <Midtrans  payment  gateway  redirect  url>,
+	"token": <Midtrans payment gateway token>,
+	"redirect_url": <Midtrans payment gateway redirect url>,
 }
 ```
 
