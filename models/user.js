@@ -102,18 +102,18 @@ module.exports = (sequelize, DataTypes) => {
         "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80";
     }
   });
-  User.afterCreate(async (instance, options) => {
-    /* VERIFICATION MAIL WITH TWILIO SENDGRID */
-    const sendgridMsg = {
-      to: instance.email,
-      from: "diazlinggaputra@gmail.com",
-      subject: "RanChat Email Verification",
-      html: content(
-        instance.fullName.trim().split(" ")[0],
-        instance.verificationCode
-      ),
-    };
-    await sgMail.send(sendgridMsg);
-  });
+  // User.afterCreate(async (instance, options) => {
+  //   /* VERIFICATION MAIL WITH TWILIO SENDGRID */
+  //   const sendgridMsg = {
+  //     to: instance.email,
+  //     from: "diazlinggaputra@gmail.com",
+  //     subject: "RanChat Email Verification",
+  //     html: content(
+  //       instance.fullName.trim().split(" ")[0],
+  //       instance.verificationCode
+  //     ),
+  //   };
+  //   await sgMail.send(sendgridMsg);
+  // });
   return User;
 };

@@ -36,8 +36,6 @@ module.exports = (err, req, res, next) => {
       });
       break;
 
-    ////
-
     case "JsonWebTokenError":
       res.status(401).json({
         message: "Invalid token",
