@@ -53,30 +53,21 @@ class PaymentController {
 
       const transaction = await snap.createTransaction(parameter);
 
-      console.log(transaction, "ini transaction ya jing");
-
-      await Payment.findOne({
-        where: {
-          UserId: req.user?.id,
-        },
+      await Payment.create({
+        UserId: req.user.id,
+        checkoutDate: new Date(),
       });
 
-      if (transaction.token) {
-        await Payment.create({
-          UserId: req.user.id,
-          checkoutDate: new Date(),
-        });
+      await User.update(
+        { isPremium: true },
+        {
+          where: {
+            id: req.user?.id,
+          },
+        }
+      );
 
-        await User.update(
-          { isPremium: true },
-          {
-            where: {
-              id: req.user?.id,
-            },
-          }
-        );
-      }
-
+      // kayaknya disini ada yang kurang sempurna, kurang paymentStatus
       res.status(200).json({
         token: transaction.token,
         redirect_url: transaction.redirect_url,
