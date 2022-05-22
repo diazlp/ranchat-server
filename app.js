@@ -42,8 +42,18 @@ app.use("/", routes);
 
 /* INI BUAT BROADCAST KE SELURUH USER */
 io.on("connection", (socket) => {
+  socket.emit("me", socket.id);
+
   socket.on("send_message", (data) => {
     socket.broadcast.emit("receive_message", data);
+  });
+
+  socket.on("calluser", ({ userToCall, signalData, from, name }) => {
+    socket.to(userToCall).emit("calluser", { signal: signalData, from, name });
+  });
+
+  socket.on("answercall", (data) => {
+    socket.to(data.to).emit("callaccepted", data.signal);
   });
 });
 ////////
