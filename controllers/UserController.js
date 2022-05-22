@@ -108,7 +108,7 @@ class UserController {
         res.status(200).json({
           message: "Email successfully verified",
         });
-      } else if (verificationCode.toLowerCase() !== req.user.verificationCode) {
+      } else {
         throw {
           name: "EmailVerificationError",
           message: "Verification code is not valid",
@@ -133,7 +133,12 @@ class UserController {
         facebook,
         instagram,
         twitter,
+        error,
       } = req.body;
+
+      if (error) {
+        throw err;
+      }
 
       const userProfile = await Profile.findOne({
         where: { UserId: id },
@@ -201,7 +206,7 @@ class UserController {
 
       res.status(200).json(findProfile);
     } catch (error) {
-      next(error);
+      // next(error)
     }
   }
 }

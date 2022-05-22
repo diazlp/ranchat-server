@@ -76,5 +76,21 @@ describe("Payment routes test", () => {
       expect(response.body).toHaveProperty("message", expect.any(String));
       expect(response.body).toBeInstanceOf(Object);
     });
+
+    test("should return status code 500 - should user payment failed", async () => {
+      const response = await request(app)
+        .post("/payment")
+        .set("access_token", verifiedToken)
+        .send({
+          error: "error",
+        });
+
+      console.log(response.ody);
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body).toHaveProperty("message", expect.any(String));
+      expect(response.body).toBeInstanceOf(Object);
+    });
   });
 });

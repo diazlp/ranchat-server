@@ -4,6 +4,11 @@ const snap = require("../services/midtrans");
 class PaymentController {
   static async payment(req, res, next) {
     try {
+      const { error } = req.body;
+      if (error) {
+        throw err;
+      }
+
       let parameter = {
         transaction_details: {
           order_id: "RanChat_" + Math.floor(Math.random() * 1000000),

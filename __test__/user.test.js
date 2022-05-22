@@ -186,7 +186,6 @@ describe("User routes test", () => {
       const response = await request(app)
         .post("/user/register")
         .send({
-          fullName: "",
           email: "diaz@mail.com",
           password: "admin",
         })
@@ -274,7 +273,7 @@ describe("User routes test", () => {
       );
     });
 
-    test("should return 500 status code - should the email is not valid", async () => {
+    test("should return 500 status code - should the login forced error", async () => {
       const response = await request(app).post("/user/login").send({
         email: "diaz@mail.com",
         password: "admin",
@@ -398,7 +397,7 @@ describe("User routes test", () => {
       const response = await request(app)
         .post("/user/verify")
         .set("access_token", validToken)
-        .send({ verificationCode: "1234" })
+        .send({ verificationCode: "AaAAAa1234" })
         .expect(400);
 
       expect(response.status).toBe(400);
@@ -572,6 +571,21 @@ describe("User routes test", () => {
       expect(response.body).toHaveProperty("message", "Invalid token");
       expect(response.body).toBeInstanceOf(Object);
     });
+
+    test("should return 500 status code - should error occured", async () => {
+      const response = await request(app)
+        .post("/user/profile")
+        .set("access_token", validToken)
+        .send({
+          error: "error",
+        });
+
+      expect(response.status).toBe(500);
+      expect(response.text).toContain("Internal Server Error");
+      expect(response.body).toHaveProperty("message");
+      expect(response.body).toHaveProperty("message", expect.any(String));
+      expect(response.body).toBeInstanceOf(Object);
+    });
   });
 
   ////////////////////// GET user/profile //////////////////////
@@ -606,5 +620,20 @@ describe("User routes test", () => {
       expect(response.body).toHaveProperty("twitter", expect.any(String));
       expect(response.body).toBeInstanceOf(Object);
     });
+
+    // test("should return 500 status code - should error is occured", async () => {
+    //   const response = await request(app)
+    //     .get("/user/profile")
+    //     .set("access_token", invalidToken)
+    //     .send({
+    //       error: "error",
+    //     });
+
+    //   expect(response.status).toBe(500);
+    //   expect(response.text).toContain("Internal Server Error");
+    //   expect(response.body).toHaveProperty("message");
+    //   expect(response.body).toHaveProperty("message", expect.any(String));
+    //   expect(response.body).toBeInstanceOf(Object);
+    // });
   });
 });
