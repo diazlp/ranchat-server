@@ -55,7 +55,7 @@ afterAll(async () => {
   await User.destroy({ truncate: true, cascade: true, restartIdentity: true });
 });
 
-describe.skip("User routes test", () => {
+describe("User routes test", () => {
   ////////////////////// POST user/register //////////////////////
   describe("POST /user/register", () => {
     test("should return 201 status code - should the user successfully created", async () => {
@@ -250,8 +250,6 @@ describe.skip("User routes test", () => {
         })
         .expect(200);
 
-      console.log(response.body);
-
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("access_token", expect.any(String));
       expect(response.body).toHaveProperty("profile", expect.any(Object));
@@ -434,7 +432,7 @@ describe.skip("User routes test", () => {
   });
 
   ////////////////////// POST user/profile //////////////////////
-  describe.skip("POST /user/profile", () => {
+  describe("POST /user/profile", () => {
     test("should return 200 status code - should user profile is created", async () => {
       const response = await request(app)
         .post("/user/profile")
@@ -499,8 +497,6 @@ describe.skip("User routes test", () => {
         .expect(201);
 
       expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty("id");
-      expect(response.body).toHaveProperty("id", expect.any(Number));
       expect(response.body).toHaveProperty("profilePicture");
       expect(response.body).toHaveProperty(
         "profilePicture",

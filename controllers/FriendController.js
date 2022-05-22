@@ -27,6 +27,7 @@ class FriendController {
           friendStatus: false,
         },
       });
+
       if (findFriendRequest) {
         //update friend that has requested before
         await Friend.update(
@@ -145,6 +146,14 @@ class FriendController {
       const { id } = req.user;
       const { friendId } = req.params;
 
+      const checkedUser = await User.findByPk(friendId);
+      if (!checkedUser) {
+        throw {
+          name: "UserNotFound",
+          message: "User not found",
+        };
+      }
+
       //update from friend request
       await Friend.update(
         { friendStatus: true },
@@ -178,6 +187,14 @@ class FriendController {
       const { id } = req.user;
       const { friendId } = req.params;
 
+      const checkedUser = await User.findByPk(friendId);
+      if (!checkedUser) {
+        throw {
+          name: "UserNotFound",
+          message: "User not found",
+        };
+      }
+
       //destroy friend request from user2
       await Friend.destroy({
         where: {
@@ -200,6 +217,15 @@ class FriendController {
     try {
       const { id } = req.user;
       const { friendId } = req.params;
+
+      const checkedUser = await User.findByPk(friendId);
+      if (!checkedUser) {
+        throw {
+          name: "UserNotFound",
+          message: "User not found",
+        };
+      }
+
       //destroy user relation
       await Friend.destroy({
         where: {

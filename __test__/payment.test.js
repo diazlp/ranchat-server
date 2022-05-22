@@ -49,7 +49,7 @@ afterAll(async () => {
   await User.destroy({ truncate: true, cascade: true, restartIdentity: true });
 });
 
-describe.skip("Payment routes test", () => {
+describe("Payment routes test", () => {
   describe("POST /payment", () => {
     test("should return status code 200 - should user payment succeeded", async () => {
       const response = await request(app)

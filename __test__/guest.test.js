@@ -96,7 +96,7 @@ describe.skip("Guest routes test", () => {
     });
   });
 
-  describe.only("GET /guest/randomRoom", () => {
+  describe.skip("GET /guest/randomRoom", () => {
     test("should return status code 200 - should get random room", async () => {
       const response = await request(app).get("/guest/randomRoom");
 
@@ -111,7 +111,7 @@ describe.skip("Guest routes test", () => {
     });
   });
 
-  describe.only("POST /guest/randomRoom", () => {
+  describe.skip("POST /guest/randomRoom", () => {
     test("should return status code 200 - should add new room", async () => {
       const response = await request(app)
         .post("/guest/randomRoom")
