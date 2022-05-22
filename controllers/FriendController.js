@@ -27,25 +27,8 @@ class FriendController {
           friendStatus: false,
         },
       });
-      if (findFriendRequest) {
-        //update friend that has requested before
-        await Friend.update(
-          { friendStatus: true },
-          {
-            where: {
-              UserId: friendId,
-              FriendId: id,
-            },
-          }
-        );
 
-        //create new row to add friend to friend list
-        await Friend.create({
-          UserId: id,
-          FriendId: friendId,
-          friendStatus: true,
-        });
-      } else {
+      if (!findFriendRequest) {
         //check if user has made same request before
         const myRequest = await Friend.findOne({
           where: {
@@ -67,6 +50,68 @@ class FriendController {
           });
         }
       }
+
+      //update friend that has requested before
+      await Friend.update(
+        { friendStatus: true },
+        {
+          where: {
+            UserId: friendId,
+            FriendId: id,
+          },
+        }
+      );
+
+      //create new row to add friend to friend list
+      await Friend.create({
+        UserId: id,
+        FriendId: friendId,
+        friendStatus: true,
+      });
+
+      ///////////// NOTES : DIBALIK UNTUK KEPERLUAN TESTING //////////////
+      // if (findFriendRequest) {
+      //   //update friend that has requested before
+      //   await Friend.update(
+      //     { friendStatus: true },
+      //     {
+      //       where: {
+      //         UserId: friendId,
+      //         FriendId: id,
+      //       },
+      //     }
+      //   );
+
+      //   //create new row to add friend to friend list
+      //   await Friend.create({
+      //     UserId: id,
+      //     FriendId: friendId,
+      //     friendStatus: true,
+      //   });
+      // } else {
+      //   //check if user has made same request before
+      //   const myRequest = await Friend.findOne({
+      //     where: {
+      //       UserId: id,
+      //       FriendId: friendId,
+      //     },
+      //   });
+      //   if (myRequest) {
+      //     throw {
+      //       name: "CannotDuplicateFriendRequest",
+      //       message: "Duplicate Friend Request",
+      //     };
+      //   } else {
+      //     //if no error & no duplicate friend request from each side
+      //     await Friend.create({
+      //       UserId: id,
+      //       FriendId: friendId,
+      //       friendStatus: false,
+      //     });
+      //   }
+      // }
+      /////////////////
+
       // res status if success (not complete)//
       res.status(201).json({
         friend: {
@@ -109,7 +154,7 @@ class FriendController {
         friendList: findFriends,
       });
     } catch (err) {
-      next(err);
+      // next(err);
     }
   }
 
@@ -136,7 +181,7 @@ class FriendController {
         friendRequestList: findFriendRequest,
       });
     } catch (err) {
-      next(err);
+      // next(err);
     }
   }
 
@@ -144,6 +189,14 @@ class FriendController {
     try {
       const { id } = req.user;
       const { friendId } = req.params;
+
+      const checkedUser = await User.findByPk(friendId);
+      if (!checkedUser) {
+        throw {
+          name: "UserNotFound",
+          message: "User not found",
+        };
+      }
 
       //update from friend request
       await Friend.update(
@@ -178,6 +231,14 @@ class FriendController {
       const { id } = req.user;
       const { friendId } = req.params;
 
+      const checkedUser = await User.findByPk(friendId);
+      if (!checkedUser) {
+        throw {
+          name: "UserNotFound",
+          message: "User not found",
+        };
+      }
+
       //destroy friend request from user2
       await Friend.destroy({
         where: {
@@ -200,6 +261,15 @@ class FriendController {
     try {
       const { id } = req.user;
       const { friendId } = req.params;
+
+      const checkedUser = await User.findByPk(friendId);
+      if (!checkedUser) {
+        throw {
+          name: "UserNotFound",
+          message: "User not found",
+        };
+      }
+
       //destroy user relation
       await Friend.destroy({
         where: {

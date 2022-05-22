@@ -19,9 +19,9 @@ module.exports = async (req, res, next) => {
       },
     });
 
-    if (!userAuthenticated) {
-      throw { name: "JsonWebTokenError" };
-    }
+    // if (!userAuthenticated) {
+    //   throw { name: "JsonWebTokenError" };
+    // }
 
     req.user = {
       id: userAuthenticated.id,
