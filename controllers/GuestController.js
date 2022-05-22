@@ -104,52 +104,73 @@ class GuestController {
 
       const db = client.db("ranchat");
 
-      const { guestSocketId } = req.body;
+      const { socketId } = req.body;
 
       const findRooms = await db.collection("Rooms").find().toArray();
 
       if (!findRooms.length) {
+        //jika tidak ada room sama sekali
         // await GuestModel.createRoom({
         //   guestCaller: guestSocketId,
         //   guestCalled: null,
         // });
 
         await db.collection("Rooms").insertOne({
-          guestCaller: guestSocketId,
+          guestCaller: socketId,
           guestCalled: null,
         });
       } else {
         let response;
         let code;
-        for (const room of findRooms) {
-          if (!room.guestCalled) {
-            // response = await GuestModel.connectingGuest({
-            //   roomId: room._id,
-            //   guestSocketId,
-            // });
+        const filterRoom = findRooms.filter((room) => !room.guestCalled);
+        if (!filterRoom[0]) {
+          response = await db.collection("Rooms").insertOne({
+            guestCaller: socketId,
+            guestCalled: null,
+          });
+          code = 201;
+        } else {
+          response = await db
+            .collection("Rooms")
+            .updateOne(
+              { _id: ObjectId(filterRoom[0]._id) },
+              { $set: { guestCalled: socketId } }
+            );
 
-            response = await db
-              .collection("Rooms")
-              .updateOne(
-                { _id: ObjectId(room._id) },
-                { $set: { guestCalled: guestSocketId } }
-              );
-
-            code = 200;
-            break;
-          } else {
-            // response = await GuestModel.createRoom({
-            //   guestCaller: guestSocketId,
-            //   guestCalled: null,
-            // });
-
-            response = await db.collection("Rooms").insertOne({
-              guestCaller: guestSocketId,
-              guestCalled: null,
-            });
-            code = 201;
-          }
+          code = 200;
         }
+        // for (const room of findRooms) {
+        //   //looping room
+        //   if (!room.guestCalled) {
+        //     //cari room yang guestCallednya kosong
+        //     // response = await GuestModel.connectingGuest({
+        //     //   roomId: room._id,
+        //     //   guestSocketId,
+        //     // });
+
+        //     response = await db
+        //       .collection("Rooms")
+        //       .updateOne(
+        //         { _id: ObjectId(room._id) },
+        //         { $set: { guestCalled: guestSocketId } }
+        //       );
+
+        //     code = 200;
+        //     break;
+        //   } else {
+        //     //karena ada room yang guestCallednya terisi maka dia akan terus membuat room baru (bug)
+        //     // response = await GuestModel.createRoom({
+        //     //   guestCaller: guestSocketId,
+        //     //   guestCalled: null,
+        //     // });
+
+        //     response = await db.collection("Rooms").insertOne({
+        //       guestCaller: guestSocketId,
+        //       guestCalled: null,
+        //     });
+        //     code = 201;
+        //   }
+        // }
         res.status(code).json(response);
       }
     } catch (error) {
