@@ -107,7 +107,8 @@ class GuestController {
       const { socketId } = req.body;
 
       const findRooms = await db.collection("Rooms").find().toArray();
-
+      let response;
+      let code;
       if (!findRooms.length) {
         //jika tidak ada room sama sekali
         // await GuestModel.createRoom({
@@ -115,13 +116,12 @@ class GuestController {
         //   guestCalled: null,
         // });
 
-        await db.collection("Rooms").insertOne({
+        response = await db.collection("Rooms").insertOne({
           guestCaller: socketId,
           guestCalled: null,
         });
+        code = 201;
       } else {
-        let response;
-        let code;
         const filterRoom = findRooms.filter((room) => !room.guestCalled);
         if (!filterRoom[0]) {
           response = await db.collection("Rooms").insertOne({
@@ -130,13 +130,14 @@ class GuestController {
           });
           code = 201;
         } else {
-          response = await db
+          await db
             .collection("Rooms")
             .updateOne(
               { _id: ObjectId(filterRoom[0]._id) },
               { $set: { guestCalled: socketId } }
             );
-
+          filterRoom[0].guestCalled = socketId;
+          response = filterRoom[0];
           code = 200;
         }
         // for (const room of findRooms) {
