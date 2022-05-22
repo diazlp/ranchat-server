@@ -274,6 +274,18 @@ describe("User routes test", () => {
       );
     });
 
+    test("should return 500 status code - should the email is not valid", async () => {
+      const response = await request(app).post("/user/login").send({
+        email: "diaz@mail.com",
+        password: "admin",
+        error: "error",
+      });
+
+      expect(response.status).toBe(500);
+      expect(response.text).toContain("Internal Server Error");
+      expect(response.body).toHaveProperty("message", expect.any(String));
+    });
+
     test("should return 400 status code - should the email is empty", async () => {
       const response = await request(app)
         .post("/user/login")

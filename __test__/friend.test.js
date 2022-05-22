@@ -70,6 +70,19 @@ describe("Friend routes test", () => {
       expect(response.body).toBeInstanceOf(Object);
     });
 
+    test("should return status code 401 - should user is not registered", async () => {
+      const response = await request(app)
+        .post("/friends")
+        .set("access_token", invalidToken)
+        .send({
+          friendId: 2,
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty("message", expect.any(String));
+      expect(response.body).toBeInstanceOf(Object);
+    });
+
     test("should return status code 400 - should user send duplicate friend request", async () => {
       const response = await request(app)
         .post("/friends")
@@ -122,6 +135,16 @@ describe("Friend routes test", () => {
     });
   });
 
+  test("should return status code 401 - should user is not registered", async () => {
+    const response = await request(app)
+      .get("/friends")
+      .set("access_token", invalidToken);
+
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty("message", expect.any(String));
+    expect(response.body).toBeInstanceOf(Object);
+  });
+
   describe("GET /friends/request", () => {
     test("should return status code 200 - should get friend request list", async () => {
       const response = await request(app)
@@ -144,6 +167,16 @@ describe("Friend routes test", () => {
         .set("access_token", validToken);
 
       expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("message", expect.any(String));
+      expect(response.body).toBeInstanceOf(Object);
+    });
+
+    test("should return status code 401 - should user is not registered", async () => {
+      const response = await request(app)
+        .patch(`/friends/${2}`)
+        .set("access_token", invalidToken);
+
+      expect(response.status).toBe(401);
       expect(response.body).toHaveProperty("message", expect.any(String));
       expect(response.body).toBeInstanceOf(Object);
     });

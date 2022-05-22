@@ -28,7 +28,12 @@ class UserController {
       const userInputForm = {
         email: req.body?.email,
         password: req.body?.password,
+        error: req.body?.error,
       };
+
+      if (userInputForm.error) {
+        throw err;
+      }
 
       if (!userInputForm.email) {
         throw { name: "LoginValidationError", message: "Email is required" };
