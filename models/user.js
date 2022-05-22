@@ -96,11 +96,6 @@ module.exports = (sequelize, DataTypes) => {
 
     instance.isVerified = false;
     instance.password = generateHashPassword(instance.password);
-
-    if (!instance.profilePicture) {
-      instance.profilePicture =
-        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80";
-    }
   });
   // User.afterCreate(async (instance, options) => {
   //   /* VERIFICATION MAIL WITH TWILIO SENDGRID */

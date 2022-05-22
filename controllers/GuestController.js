@@ -31,18 +31,18 @@ class GuestController {
       }
       const guestName = `Guest${generateUsername("", 0, 12)}#${num}`;
 
-      num = "";
-      for (let i = 0; i < 8; i++) {
-        num += (Math.floor(Math.random() * 9) + 1).toString();
-      }
-      const identifier = num;
+      // num = "";
+      // for (let i = 0; i < 8; i++) {
+      //   num += (Math.floor(Math.random() * 9) + 1).toString();
+      // }
+      const { socketId } = req.body;
+      const identifier = socketId; //identifier using socket.id
       const payload = {
         guest: guestName,
         identifier,
       };
       const result = await db.collection("Guests").insertOne(payload);
-
-      res.status(201).json(result);
+      res.status(201).json({ mongoId: result.insertedId });
     } catch (error) {
       next(error);
     }
