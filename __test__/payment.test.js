@@ -85,8 +85,6 @@ describe("Payment routes test", () => {
           error: "error",
         });
 
-      console.log(response.ody);
-
       expect(response.status).toBe(500);
       expect(response.body).toHaveProperty("message");
       expect(response.body).toHaveProperty("message", expect.any(String));
