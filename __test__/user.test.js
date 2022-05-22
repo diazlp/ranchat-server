@@ -434,7 +434,7 @@ describe.skip("User routes test", () => {
   });
 
   ////////////////////// POST user/profile //////////////////////
-  describe("POST /user/profile", () => {
+  describe.skip("POST /user/profile", () => {
     test("should return 200 status code - should user profile is created", async () => {
       const response = await request(app)
         .post("/user/profile")

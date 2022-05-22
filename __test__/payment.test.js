@@ -5,7 +5,6 @@ const { generateToken } = require("../helpers/jwt");
 
 let verifiedToken;
 let unverifiedToken;
-let invalidToken = "w1800j1hh10wj0jd10jw901jdj";
 beforeAll(async () => {
   await User.destroy({ truncate: true, cascade: true, restartIdentity: true });
 
@@ -55,8 +54,8 @@ describe.skip("Payment routes test", () => {
     test("should return status code 200 - should user payment succeeded", async () => {
       const response = await request(app)
         .post("/payment")
-        .set("access_token", verifiedToken);
-      // .expect(200);
+        .set("access_token", verifiedToken)
+        .expect(200);
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("token");
@@ -71,8 +70,6 @@ describe.skip("Payment routes test", () => {
         .post("/payment")
         .set("access_token", unverifiedToken)
         .expect(403);
-
-      console.log(response.body, "<<< ini unverified");
 
       expect(response.status).toBe(403);
       expect(response.body).toHaveProperty("message");
