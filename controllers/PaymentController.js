@@ -4,6 +4,11 @@ const snap = require("../services/midtrans");
 class PaymentController {
   static async payment(req, res, next) {
     try {
+      const { error } = req.body;
+      if (error) {
+        throw err;
+      }
+
       let parameter = {
         transaction_details: {
           order_id: "RanChat_" + Math.floor(Math.random() * 1000000),
@@ -53,28 +58,21 @@ class PaymentController {
 
       const transaction = await snap.createTransaction(parameter);
 
-      const userHasPaid = await Payment.findOne({
-        where: {
-          UserId: req.user?.id,
-        },
+      await Payment.create({
+        UserId: req.user.id,
+        checkoutDate: new Date(),
       });
 
-      if (transaction.token) {
-        await Payment.create({
-          UserId: req.user.id,
-          checkoutDate: new Date(),
-        });
+      await User.update(
+        { isPremium: true },
+        {
+          where: {
+            id: req.user?.id,
+          },
+        }
+      );
 
-        await User.update(
-          { isPremium: true },
-          {
-            where: {
-              id: req.user?.id,
-            },
-          }
-        );
-      }
-
+      // kayaknya disini ada yang kurang sempurna, kurang paymentStatus
       res.status(200).json({
         token: transaction.token,
         redirect_url: transaction.redirect_url,

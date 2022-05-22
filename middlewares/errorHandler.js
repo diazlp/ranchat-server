@@ -30,13 +30,17 @@ module.exports = (err, req, res, next) => {
       });
       break;
 
-    case "CannotDuplicateFriendRequest":
+    case "CannotAddGuestAccount":
       res.status(400).json({
         message: err.message,
       });
       break;
 
-    ////
+    case "CannotDuplicateFriendRequest":
+      res.status(400).json({
+        message: err.message,
+      });
+      break;
 
     case "JsonWebTokenError":
       res.status(401).json({
