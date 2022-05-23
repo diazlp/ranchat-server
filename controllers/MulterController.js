@@ -10,7 +10,7 @@ class MulterController {
 
       res.status(200).json({ imageUrl: image });
     } catch (error) {
-      next(error);
+      //   next(error);
     }
   }
 }
