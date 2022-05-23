@@ -202,11 +202,29 @@ class UserController {
         where: {
           UserId: id,
         },
+        include: [User],
       });
 
       res.status(200).json(findProfile);
     } catch (error) {
       // next(error)
+    }
+  }
+
+  static async findUser(req, res, next) {
+    try {
+      const { id } = req.body;
+
+      const findUser = await User.findOne({
+        where: {
+          id,
+        },
+        include: [Profile],
+      });
+
+      res.status(200).json(findUser);
+    } catch (error) {
+      next(error);
     }
   }
 }

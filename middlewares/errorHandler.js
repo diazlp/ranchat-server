@@ -11,6 +11,10 @@ module.exports = (err, req, res, next) => {
       break;
 
     case "LoginValidationError":
+    case "AlreadyInFriendlist":
+    case "AddMessageFailed":
+    case "FailedToDeleteConversation":
+    case "ChatRoomAlreadyCreate":
       res.status(400).json({
         // message: "Email/password is required",
         message: err.message,

@@ -1,4 +1,4 @@
-const { User, Friend } = require("../models");
+const { User, Friend, Profile } = require("../models");
 class FriendController {
   static async sendFriendRequest(req, res, next) {
     try {
@@ -138,14 +138,14 @@ class FriendController {
             attributes: {
               exclude: ["createdAt", "updatedAt", "password"],
             },
-            // include: [
-            //   {
-            //     model: Profile,
-            //     attributes: {
-            //       exclude: ["createdAt", "updatedAt"],
-            //     },
-            //   },
-            // ],
+            include: [
+              {
+                model: Profile,
+                attributes: {
+                  exclude: ["createdAt", "updatedAt"],
+                },
+              },
+            ],
           },
         ],
       });
@@ -196,6 +196,17 @@ class FriendController {
           name: "UserNotFound",
           message: "User not found",
         };
+      }
+
+      const find = await Friend.findOne({
+        where: {
+          UserId: friendId,
+          FriendId: id,
+          friendStatus: true,
+        },
+      });
+      if (find) {
+        throw { name: "AlreadyInFriendlist", message: "Already In Friendlist" };
       }
 
       //update from friend request
