@@ -198,16 +198,17 @@ class FriendController {
         };
       }
 
-      const find = await Friend.findOne({
-        where: {
-          UserId: friendId,
-          FriendId: id,
-          friendStatus: true,
-        },
-      });
-      if (find) {
-        throw { name: "AlreadyInFriendlist", message: "Already In Friendlist" };
-      }
+      // const find = await Friend.findOne({
+      //   where: {
+      //     UserId: friendId,
+      //     FriendId: id,
+      //     friendStatus: true,
+      //   },
+      // });
+      // if (find) {
+      //   console.log("lah ini find goblook");
+      //   throw { name: "AlreadyInFriendlist", message: "Already In Friendlist" };
+      // }
 
       //update from friend request
       await Friend.update(

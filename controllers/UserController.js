@@ -224,7 +224,7 @@ class UserController {
 
       res.status(200).json(findUser);
     } catch (error) {
-      next(error);
+      // next(error);
     }
   }
 }

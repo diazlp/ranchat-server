@@ -636,4 +636,19 @@ describe("User routes test", () => {
     //   expect(response.body).toBeInstanceOf(Object);
     // });
   });
+
+  ////////////////////// POST /user //////////////////////
+  describe("POST /user", () => {
+    test("should return 200 status code - should the user is found", async () => {
+      const response = await request(app)
+        .post("/user")
+        .set("access_token", validToken)
+        .send({
+          id: 1,
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expect.any(Object));
+    });
+  });
 });
