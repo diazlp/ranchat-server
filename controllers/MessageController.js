@@ -6,7 +6,8 @@ const client = new MongoClient(uri);
 class MessageController {
   static async addMessage(req, res, next) {
     try {
-      const { roomfriendid, text, photo, id } = req.body;
+      const { roomfriendid, text, photo } = req.body;
+      const { id } = req.user;
       await client.connect();
       let photoMessage = photo;
       const db = client.db("ranchat");

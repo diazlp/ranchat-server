@@ -1,4 +1,4 @@
-const { User, Friend } = require("../models");
+const { User, Friend, Profile } = require("../models");
 class FriendController {
   static async sendFriendRequest(req, res, next) {
     try {
@@ -93,14 +93,14 @@ class FriendController {
             attributes: {
               exclude: ["createdAt", "updatedAt", "password"],
             },
-            // include: [
-            //   {
-            //     model: Profile,
-            //     attributes: {
-            //       exclude: ["createdAt", "updatedAt"],
-            //     },
-            //   },
-            // ],
+            include: [
+              {
+                model: Profile,
+                attributes: {
+                  exclude: ["createdAt", "updatedAt"],
+                },
+              },
+            ],
           },
         ],
       });
