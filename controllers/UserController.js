@@ -10,9 +10,7 @@ class UserController {
         email: req.body?.email || null,
         password: req.body?.password || null,
       };
-
       const userCreatedData = await User.create(userInputForm);
-
       res.status(201).json({
         id: userCreatedData.id,
         fullName: userCreatedData.fullName,
@@ -29,7 +27,6 @@ class UserController {
         email: req.body?.email,
         password: req.body?.password,
       };
-      console.log(userInputForm);
 
       if (!userInputForm.email) {
         throw { name: "LoginValidationError", message: "Email is required" };
@@ -193,9 +190,26 @@ class UserController {
         where: {
           UserId: id,
         },
+        include: [User],
       });
 
       res.status(200).json(findProfile);
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async findUser(req, res, next) {
+    try {
+      const { id } = req.body;
+
+      const findUser = await User.findOne({
+        where: {
+          id,
+        },
+        include: [Profile],
+      });
+
+      res.status(200).json(findUser);
     } catch (error) {
       next(error);
     }

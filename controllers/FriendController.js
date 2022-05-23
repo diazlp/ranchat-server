@@ -145,7 +145,18 @@ class FriendController {
       const { id } = req.user;
       const { friendId } = req.params;
 
+      const find = await Friend.findOne({
+        where: {
+          UserId: friendId,
+          FriendId: id,
+          friendStatus: true,
+        },
+      });
+      if (find) {
+        throw { name: "AlreadyInFriendlist", message: "Already In Friendlist" };
+      }
       //update from friend request
+
       await Friend.update(
         { friendStatus: true },
         {
