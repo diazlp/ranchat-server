@@ -74,6 +74,7 @@ class UserController {
           fullName: matchingUser.fullName,
           email: matchingUser.email,
           isVerified: matchingUser.isVerified,
+          isPremium: matchingUser.isPremium,
           status: matchingUser.status,
         },
       });

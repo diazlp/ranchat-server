@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("a user disconnected!");
+    // console.log("an user has disconnected!");
     removeUser(socket.id);
     io.emit("getUsers", users);
   });

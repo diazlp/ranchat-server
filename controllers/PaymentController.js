@@ -12,7 +12,7 @@ class PaymentController {
       let parameter = {
         transaction_details: {
           order_id: "RanChat_" + Math.floor(Math.random() * 1000000),
-          gross_amount: 50000,
+          gross_amount: 150000,
         },
         customer_details: {
           first_name: req.user?.fullName.split(" ")[0],
