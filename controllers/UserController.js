@@ -10,6 +10,7 @@ class UserController {
         email: req.body?.email || null,
         password: req.body?.password || null,
       };
+      console.log(userInputForm);
       const userCreatedData = await User.create(userInputForm);
       res.status(201).json({
         id: userCreatedData.id,

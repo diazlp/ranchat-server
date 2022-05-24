@@ -101,11 +101,15 @@ class MessageController {
       const { id } = req.user;
       await client.connect();
       const db = client.db("ranchat");
-      const findRoom = await db.collection("RoomFriends").findOne({
-        sender,
+      const findRoom1 = await db.collection("RoomFriends").findOne({
+        members: [id, +receiverId],
       });
 
-      if (findRoom) {
+      const findRoom2 = await db.collection("RoomFriends").findOne({
+        members: [+receiverId, id],
+      });
+
+      if (findRoom1 || findRoom2) {
         throw {
           name: "ChatRoomAlreadyCreate",
           message: "Chat Room Already Create",

@@ -57,12 +57,15 @@ io.on("connection", (socket) => {
   socket.on("adduser", (UserId) => {
     if (UserId) {
       addUser(UserId, socket.id);
+      console.log(users);
+
       io.emit("getUsers", users);
     }
   });
 
   socket.on("sendMessage", ({ senderId, receiverId, text, friendRoom }) => {
     const user = getUser(receiverId);
+
     if (user) {
       io.to(user.socketId).emit("getMessage", {
         friendRoom,

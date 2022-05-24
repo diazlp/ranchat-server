@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Fullname is required",
           },
           isTwoWords(value) {
+            console.log(value);
             if (value.trim().split(" ").length < 2) {
               throw new Error("Fullname should be at least two words");
             }
