@@ -64,7 +64,12 @@ io.on("connection", (socket) => {
 
   socket.on("send_message", (data) => {
     socket.broadcast.emit("receive_message", data);
-  });
+  }); //dummypage
+
+  socket.on("sendMessageFromVideo", (payload) => {
+    // console.log(payload);
+    socket.to(payload.receiver).emit("receiveMessageFromVideo", payload);
+  }); // send chat videoPage
 
   socket.on("calluser", ({ userToCall, signalData, from, name }) => {
     socket.to(userToCall).emit("calluser", { signal: signalData, from, name });
