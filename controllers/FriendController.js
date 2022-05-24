@@ -2,8 +2,14 @@ const { User, Friend, Profile } = require("../models");
 class FriendController {
   static async sendFriendRequest(req, res, next) {
     try {
-      const { id } = req.user;
-      const { friendId } = req.body;
+      ////
+      // const { id } = req.user;
+      // const { friendId } = req.body;
+      ////
+
+      const friendId = req.user.id;
+      const id = req.body.userId;
+
       //check if friendId is falsy
       if (!friendId) {
         throw {
@@ -28,67 +34,7 @@ class FriendController {
         },
       });
 
-      if (!findFriendRequest) {
-        //check if user has made same request before
-        const myRequest = await Friend.findOne({
-          where: {
-            UserId: id,
-            FriendId: friendId,
-          },
-        });
-        if (myRequest) {
-          throw {
-            name: "CannotDuplicateFriendRequest",
-            message: "Duplicate Friend Request",
-          };
-        } else {
-          //if no error & no duplicate friend request from each side
-          await Friend.create({
-            UserId: id,
-            FriendId: friendId,
-            friendStatus: false,
-          });
-        }
-      }
-
-      //update friend that has requested before
-      await Friend.update(
-        { friendStatus: true },
-        {
-          where: {
-            UserId: friendId,
-            FriendId: id,
-          },
-        }
-      );
-
-      //create new row to add friend to friend list
-      await Friend.create({
-        UserId: id,
-        FriendId: friendId,
-        friendStatus: true,
-      });
-
-      ///////////// NOTES : DIBALIK UNTUK KEPERLUAN TESTING //////////////
-      // if (findFriendRequest) {
-      //   //update friend that has requested before
-      //   await Friend.update(
-      //     { friendStatus: true },
-      //     {
-      //       where: {
-      //         UserId: friendId,
-      //         FriendId: id,
-      //       },
-      //     }
-      //   );
-
-      //   //create new row to add friend to friend list
-      //   await Friend.create({
-      //     UserId: id,
-      //     FriendId: friendId,
-      //     friendStatus: true,
-      //   });
-      // } else {
+      // if (!findFriendRequest) {
       //   //check if user has made same request before
       //   const myRequest = await Friend.findOne({
       //     where: {
@@ -110,6 +56,66 @@ class FriendController {
       //     });
       //   }
       // }
+
+      // //update friend that has requested before
+      // await Friend.update(
+      //   { friendStatus: true },
+      //   {
+      //     where: {
+      //       UserId: friendId,
+      //       FriendId: id,
+      //     },
+      //   }
+      // );
+
+      // //create new row to add friend to friend list
+      // await Friend.create({
+      //   UserId: id,
+      //   FriendId: friendId,
+      //   friendStatus: true,
+      // });
+
+      ///////////// NOTES : DIBALIK UNTUK KEPERLUAN TESTING //////////////
+      if (findFriendRequest) {
+        //update friend that has requested before
+        await Friend.update(
+          { friendStatus: true },
+          {
+            where: {
+              UserId: friendId,
+              FriendId: id,
+            },
+          }
+        );
+
+        //create new row to add friend to friend list
+        await Friend.create({
+          UserId: id,
+          FriendId: friendId,
+          friendStatus: true,
+        });
+      } else {
+        //check if user has made same request before
+        const myRequest = await Friend.findOne({
+          where: {
+            UserId: id,
+            FriendId: friendId,
+          },
+        });
+        if (myRequest) {
+          throw {
+            name: "CannotDuplicateFriendRequest",
+            message: "Duplicate Friend Request",
+          };
+        } else {
+          //if no error & no duplicate friend request from each side
+          await Friend.create({
+            UserId: id,
+            FriendId: friendId,
+            friendStatus: false,
+          });
+        }
+      }
       /////////////////
 
       // res status if success (not complete)//

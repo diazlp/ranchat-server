@@ -59,9 +59,15 @@ const getUser = (userId) => {
 
 /* INI BUAT BROADCAST KE SELURUH USER */
 io.on("connection", (socket) => {
-  // RANDOM CHAT (KEVIN)
   socket.emit("me", socket.id);
 
+  // FRIEND FEATURE (KEVIN)
+  socket.on("friendRequest", (payload) => {
+    // console.log("masuk receive friend Request");
+    socket.to(payload.receiverId).emit("createfriendRequest", payload.userId);
+  });
+
+  // RANDOM CHAT (KEVIN)
   socket.on("send_message", (data) => {
     socket.broadcast.emit("receive_message", data);
   }); //dummypage
