@@ -1,4 +1,5 @@
 const { MongoClient, ObjectId } = require("mongodb");
+const { imageKit } = require("../middlewares/multer");
 
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -6,13 +7,24 @@ const client = new MongoClient(uri);
 class MessageController {
   static async addMessage(req, res, next) {
     try {
-      const { roomfriendid, text, photo } = req.body;
+      const { roomfriendid, text } = req.body;
+      let result;
       const { id } = req.user;
       await client.connect();
-      let photoMessage = photo;
       const db = client.db("ranchat");
-      let result;
-      if (text) {
+
+      if (req.file) {
+        const { buffer, originalname } = req.file;
+        let response = await imageKit(buffer, originalname);
+
+        result = await db.collection("message").insertOne({
+          roomFriendId: roomfriendid,
+          sender: id,
+          text: null,
+          photo: response.data.url,
+          createdAt: new Date(),
+        });
+      } else {
         result = await db.collection("message").insertOne({
           roomFriendId: roomfriendid,
           sender: id,
@@ -20,15 +32,26 @@ class MessageController {
           photo: null,
           createdAt: new Date(),
         });
-      } else if (photoMessage) {
-        result = await db.collection("message").insertOne({
-          roomFriendId: roomfriendid,
-          sender: id,
-          text: null,
-          photo,
-          createdAt: new Date(),
-        });
       }
+
+      // let result;
+      // if (text) {
+      //   result = await db.collection("message").insertOne({
+      //     roomFriendId: roomfriendid,
+      //     sender: id,
+      //     text,
+      //     photo: null,
+      //     createdAt: new Date(),
+      //   });
+      // } else if (photoMessage) {
+      // result = await db.collection("message").insertOne({
+      //   roomFriendId: roomfriendid,
+      //   sender: id,
+      //   text: null,
+      //   photo,
+      //   createdAt: new Date(),
+      // });
+      // }
 
       if (result) {
         return res.status(200).json({ message: "Message added successfully." });
@@ -39,6 +62,7 @@ class MessageController {
         };
       }
     } catch (error) {
+      console.log("error: ", error);
       next(error);
     }
   }

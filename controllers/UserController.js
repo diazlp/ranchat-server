@@ -30,6 +30,7 @@ class UserController {
         password: req.body?.password,
         error: req.body?.error,
       };
+      console.log("userInputForm: ", userInputForm);
 
       if (userInputForm.error) {
         throw err;
@@ -52,10 +53,7 @@ class UserController {
         throw { name: "UserNotValid" };
       }
 
-      const isPasswordMatch = verifyPassword(
-        userInputForm.password,
-        matchingUser.password
-      );
+      const isPasswordMatch = verifyPassword(userInputForm.password, matchingUser.password);
 
       if (!isPasswordMatch) {
         throw { name: "UserNotValid" };
@@ -123,18 +121,7 @@ class UserController {
     try {
       const { id } = req.user;
 
-      const {
-        profilePicture,
-        birthday,
-        address,
-        gender,
-        bio,
-        banner,
-        facebook,
-        instagram,
-        twitter,
-        error,
-      } = req.body;
+      const { profilePicture, birthday, address, gender, bio, banner, facebook, instagram, twitter, error } = req.body;
 
       if (error) {
         throw err;
