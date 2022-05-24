@@ -7,29 +7,35 @@ const client = new MongoClient(uri);
 class MessageController {
   static async addMessage(req, res, next) {
     try {
-      const { roomfriendid, text } = req.body;
+      const { friendRoom, text } = req.body;
+      console.log("req.body: ", req.body);
       let result;
       const { id } = req.user;
       await client.connect();
       const db = client.db("ranchat");
+      let response;
 
       if (req.file) {
         const { buffer, originalname } = req.file;
-        let response = await imageKit(buffer, originalname);
+        console.log("masuk if");
+        response = await imageKit(buffer, originalname);
 
         result = await db.collection("message").insertOne({
-          roomFriendId: roomfriendid,
+          roomFriendId: friendRoom,
           sender: id,
           text: null,
           photo: response.data.url,
+          type: "file",
           createdAt: new Date(),
         });
       } else {
+        console.log("masuk else");
         result = await db.collection("message").insertOne({
           roomFriendId: roomfriendid,
           sender: id,
           text,
           photo: null,
+          type: "text",
           createdAt: new Date(),
         });
       }
@@ -52,9 +58,8 @@ class MessageController {
       //   createdAt: new Date(),
       // });
       // }
-
       if (result) {
-        return res.status(200).json({ message: "Message added successfully." });
+        return res.status(200).json({ message: "Message added successfully.", imgUrl: response.data.url });
       } else {
         throw {
           name: "AddMessageFailed",
@@ -88,6 +93,7 @@ class MessageController {
             senderId: msg.sender,
             message: msg.text,
             photo: msg.photo,
+            type: msg.type,
             time: msg.createdAt,
           };
         });

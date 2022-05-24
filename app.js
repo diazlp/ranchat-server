@@ -44,8 +44,7 @@ app.use("/", routes);
 let users = [];
 
 const addUser = (userId, socketId) => {
-  !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+  !users.some((user) => user.userId === userId) && users.push({ userId, socketId });
 };
 
 const removeUser = (socketId) => {
@@ -82,13 +81,14 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text, friendRoom }) => {
+  socket.on("sendMessage", ({ senderId, receiverId, text, friendRoom, photo }) => {
     const user = getUser(receiverId);
     if (user) {
       io.to(user.socketId).emit("getMessage", {
         friendRoom,
         senderId,
         text,
+        photo,
       });
     }
   });
