@@ -34,7 +34,7 @@ class GuestController {
         identifier,
       };
       const result = await db.collection("Guests").insertOne(payload);
-      res.status(201).json({ mongoId: result.insertedId });
+      res.status(201).json({ mongoId: result.insertedId, socketId });
     } catch (error) {
       // next(error);
     }
