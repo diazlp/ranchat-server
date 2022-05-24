@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const MessageController = require("../controllers/messageController");
+const MessageController = require("../controllers/MessageController");
 const requireLogin = require("../middlewares/requireLogin");
 
 router.use(requireLogin);
