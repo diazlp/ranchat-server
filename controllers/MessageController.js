@@ -1,42 +1,55 @@
 const { MongoClient, ObjectId } = require("mongodb");
-
+const { imageKit } = require("../middlewares/multer");
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 class MessageController {
   static async addMessage(req, res, next) {
     try {
-      const { roomfriendid, text, photo } = req.body;
+      const { friendRoom, text } = req.body;
       const { id } = req.user;
       await client.connect();
-      let photoMessage = photo;
-      const db = client.db("ranchat");
       let result;
-      if (text) {
+      const db = client.db("ranchat");
+      let response;
+
+      if (req.file) {
+        const { buffer, originalname } = req.file;
+        response = await imageKit(buffer, originalname);
+
         result = await db.collection("message").insertOne({
-          roomFriendId: roomfriendid,
+          roomFriendId: friendRoom,
+          sender: id,
+          text: null,
+          photo: response.data.url,
+          type: "image",
+          createdAt: new Date(),
+        });
+        res.status(200).json({
+          message: "Message added successfully.",
+          imgUrl: response.data.url,
+        });
+      } else {
+        result = await db.collection("message").insertOne({
+          roomFriendId: friendRoom,
           sender: id,
           text,
           photo: null,
+          type: "text",
           createdAt: new Date(),
         });
-      } else if (photoMessage) {
-        result = await db.collection("message").insertOne({
-          roomFriendId: roomfriendid,
-          sender: id,
-          text: null,
-          photo,
-          createdAt: new Date(),
+        res.status(200).json({
+          message: "Message added successfully.",
         });
       }
-
-      if (result) return res.json({ message: "Message added successfully." });
-      else
+      if (!result) {
         throw {
           name: "AddMessageFailed",
           message: "Failed to add message to the database",
         };
+      }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -60,6 +73,7 @@ class MessageController {
             senderId: msg.sender,
             message: msg.text,
             photo: msg.photo,
+            type: msg.type,
             time: msg.createdAt,
           };
         });
