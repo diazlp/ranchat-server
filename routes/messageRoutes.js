@@ -7,11 +7,12 @@ router.use(requireLogin);
 router.post("/roomfriend", MessageController.addRoomFriend); //add RoomFriend
 router.get("/roomfriend", MessageController.findRoomFriend); //find RoomFriend
 router.delete(
-  "/conversation/:RoomFriendId",
+  "/conversation/:roomfriendid",
   MessageController.deleteRoomFriend
 ); //delete RoomFriend
+
 router.post("/addmessage", MessageController.addMessage); //add message
 router.get("/findmessage/:roomfriendid", MessageController.findMessage); //find message
-router.get("/findlastmessage/:friendid", MessageController.findLastMessage);
+// router.get("/findlastmessage/:friendid", MessageController.findLastMessage);
 
 module.exports = router;

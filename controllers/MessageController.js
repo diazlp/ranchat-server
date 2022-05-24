@@ -30,12 +30,14 @@ class MessageController {
         });
       }
 
-      if (result) return res.json({ message: "Message added successfully." });
-      else
+      if (result) {
+        return res.status(200).json({ message: "Message added successfully." });
+      } else {
         throw {
           name: "AddMessageFailed",
           message: "Failed to add message to the database",
         };
+      }
     } catch (error) {
       next(error);
     }
@@ -47,6 +49,7 @@ class MessageController {
       await client.connect();
 
       const db = client.db("ranchat");
+
       if (roomfriendid) {
         const messages = await db
           .collection("message")
@@ -54,6 +57,7 @@ class MessageController {
             roomFriendId: roomfriendid,
           })
           .toArray();
+
         const projectedMessages = messages.map((msg) => {
           return {
             fromSelf: msg.sender === +id ? "you" : "guest",
@@ -63,44 +67,50 @@ class MessageController {
             time: msg.createdAt,
           };
         });
+
         res.status(200).json(projectedMessages);
       }
     } catch (error) {
-      next(error);
+      // next(error);
     }
   }
 
-  static async findLastMessage(req, res, next) {
-    try {
-      const { friendid } = req.params;
-      const { id } = req.user;
+  //// INI BELUM SELESAI KAH?
+  // static async findLastMessage(req, res, next) {
+  //   try {
+  //     const { friendid } = req.params;
+  //     const { id } = req.user;
 
-      await client.connect();
+  //     await client.connect();
 
-      const db = client.db("ranchat");
-      if (friendid) {
-        const messages = await db
-          .collection("message")
-          .find({
-            roomFriendId: friendid,
-          })
-          .sort({ createdAt: -1 })
-          .toArray();
-        const projectedMessages = messages.filter((msg) => {
-          return msg.sender !== +id;
-        });
-        res.status(200).json(projectedMessages[0].text);
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     const db = client.db("ranchat");
+
+  //     if (friendid) {
+  //       const messages = await db
+  //         .collection("message")
+  //         .find({
+  //           roomFriendId: friendid,
+  //         })
+  //         .sort({ createdAt: -1 })
+  //         .toArray();
+
+  //       const projectedMessages = messages.filter((msg) => {
+  //         return msg.sender !== +id;
+  //       });
+  //       res.status(200).json(projectedMessages[0].text);
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+
   static async addRoomFriend(req, res, next) {
     try {
       const { receiverId, sender } = req.body;
       const { id } = req.user;
       await client.connect();
       const db = client.db("ranchat");
+
       const findRoom = await db.collection("RoomFriends").findOne({
         sender,
       });
@@ -108,7 +118,7 @@ class MessageController {
       if (findRoom) {
         throw {
           name: "ChatRoomAlreadyCreate",
-          message: "Chat Room Already Create",
+          message: "Chat Room Already Created",
         };
       }
       const result = await db.collection("RoomFriends").insertOne({
@@ -116,7 +126,7 @@ class MessageController {
         sender,
       });
 
-      res.json(result);
+      res.status(201).json(result);
     } catch (error) {
       next(error);
     }
@@ -134,43 +144,48 @@ class MessageController {
           members: { $all: [+id] },
         })
         .toArray();
-      res.json(result);
+
+      res.status(200).json(result);
     } catch (error) {
-      next(error);
+      // next(error);
     }
   }
 
-  static async findRoomFriendById(req, res, next) {
-    try {
-      const { id } = req.user;
-      await client.connect();
-      const db = client.db("ranchat");
+  //// KODE DIBAWAH INI GA DIPAKE YAH? : UNTUK FITRAH
+  // static async findRoomFriendById(req, res, next) {
+  //   try {
+  //     const { id } = req.user;
+  //     await client.connect();
+  //     const db = client.db("ranchat");
 
-      const result = await db
-        .collection("RoomFriends")
-        .find({
-          members: { $all: [+id] },
-        })
-        .toArray();
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     const result = await db
+  //       .collection("RoomFriends")
+  //       .find({
+  //         members: { $all: [+id] },
+  //       })
+  //       .toArray();
+  //     res.status(200).json(result);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+  ////
 
   static async deleteRoomFriend(req, res, next) {
     try {
       const { roomfriendid } = req.params;
       await client.connect();
+
       const db = client.db("ranchat");
+
       if (roomfriendid) {
         const messages = await db.collection("RoomFriends").deleteOne({
           _id: ObjectId(roomfriendid),
         });
 
-        if (messages) {
-          res.status(201).json({
-            message: "Delete conversation Successfull",
+        if (messages.deletedCount) {
+          res.status(200).json({
+            message: "Delete conversation Successful",
           });
         } else {
           throw {

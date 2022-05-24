@@ -20,7 +20,8 @@ async function imageKit(buffer, originalname) {
       },
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    // next(error);
   }
 }
 

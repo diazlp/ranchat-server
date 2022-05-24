@@ -2,7 +2,7 @@ const request = require("supertest");
 const { app } = require("../app");
 const fs = require("fs");
 
-describe.skip("Multer routes test", () => {
+describe("Multer routes test", () => {
   describe("POST /multer", () => {
     test("should return status code 200 - should user payment succeeded", async () => {
       const response = await request(app)
