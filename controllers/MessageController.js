@@ -6,7 +6,7 @@ const client = new MongoClient(uri);
 class MessageController {
   static async addMessage(req, res, next) {
     try {
-      const { friendRoom, text } = req.body;
+      const { friendRoom, text, location } = req.body;
       const { id } = req.user;
       await client.connect();
       let result;
@@ -27,6 +27,19 @@ class MessageController {
         res.status(200).json({
           message: "Message added successfully.",
           imgUrl: response.data.url,
+        });
+      } else if (location) {
+        result = await db.collection("message").insertOne({
+          roomFriendId: friendRoom,
+          sender: id,
+          text: location,
+          photo: null,
+          type: "location",
+          createdAt: new Date(),
+        });
+        res.status(200).json({
+          message: "Message added successfully.",
+          location,
         });
       } else {
         result = await db.collection("message").insertOne({

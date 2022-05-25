@@ -70,15 +70,16 @@ io.on("connection", (socket) => {
 
   socket.on(
     "sendMessage",
-    ({ senderId, receiverId, text, friendRoom, photo }) => {
+    ({ senderId, receiverId, text, friendRoom, photo, type }) => {
       const user = getUser(receiverId);
-
+      console.log(type);
       if (user) {
         io.to(user.socketId).emit("getMessage", {
           friendRoom,
           senderId,
           text,
           photo,
+          type,
         });
       }
     }
