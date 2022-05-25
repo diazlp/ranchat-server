@@ -71,6 +71,7 @@ io.on("connection", (socket) => {
   socket.on(
     "sendMessage",
     ({ senderId, receiverId, text, friendRoom, photo, type }) => {
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
       const user = getUser(receiverId);
       console.log(type);
       if (user) {
