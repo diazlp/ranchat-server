@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest --coverage --forceExit --runInBand --testTimeout=60000",
+    "dev": "nodemon server",
     "dev2": "nodemon bin/www",
     "dev3": "nodemon bin/http",
-    "dev": "nodemon server",
     "start": "node server"
   },
   "keywords": [],

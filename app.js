@@ -22,7 +22,17 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Socket.io related
+const routes = require("./routes");
+
+app.use("/", routes);
+
+console.log("masuk sini kan!");
+
+app.use(errorHandler);
+
+module.exports = app;
+
+// INI SEMUA DIPINDAH YAAA, UNTUK TESTING
 // const http = require("http");
 // const { Server } = require("socket.io");
 
@@ -36,10 +46,7 @@ app.use(express.json());
 //   },
 // });
 
-const routes = require("./routes");
-
-app.use("/", routes);
-
+////////////// NOTES: NGERJAIN SOCKET IO DARI socketConfig.js ya
 //* Ini function buat socket io
 // let users = [];
 
@@ -133,7 +140,3 @@ app.use("/", routes);
 //   ChatController.videoCallRequest(chat, socket);
 //   ChatController.answerCall(chat, socket);
 // });
-
-app.use(errorHandler);
-
-module.exports = app;

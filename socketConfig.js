@@ -30,8 +30,6 @@ const getUser = (userId) => {
 io.on("connection", (socket) => {
   socket.emit("me", socket.id);
 
-  console.log(socket.id, "<<<<<<");
-
   // FRIEND FEATURE (KEVIN)
   socket.on("friendRequest", (payload) => {
     // console.log("masuk receive friend Request");
