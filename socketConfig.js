@@ -62,16 +62,21 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("sendMessage", ({ senderId, receiverId, text, friendRoom }) => {
-    const user = getUser(receiverId);
-    if (user) {
-      io.to(user.socketId).emit("getMessage", {
-        friendRoom,
-        senderId,
-        text,
-      });
+  socket.on(
+    "sendMessage",
+    ({ senderId, receiverId, text, friendRoom, photo }) => {
+      const user = getUser(receiverId);
+
+      if (user) {
+        io.to(user.socketId).emit("getMessage", {
+          friendRoom,
+          senderId,
+          text,
+          photo,
+        });
+      }
     }
-  });
+  );
 
   socket.on("disconnect", () => {
     // console.log("an user has disconnected!");
