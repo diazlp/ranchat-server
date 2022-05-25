@@ -97,18 +97,18 @@ module.exports = (sequelize, DataTypes) => {
     instance.isVerified = false;
     instance.password = generateHashPassword(instance.password);
   });
-  // User.afterCreate(async (instance, options) => {
-  //   /* VERIFICATION MAIL WITH TWILIO SENDGRID */
-  //   const sendgridMsg = {
-  //     to: instance.email,
-  //     from: "diazlinggaputra@gmail.com",
-  //     subject: "RanChat Email Verification",
-  //     html: content(
-  //       instance.fullName.trim().split(" ")[0],
-  //       instance.verificationCode
-  //     ),
-  //   };
-  //   await sgMail.send(sendgridMsg);
-  // });
+  User.afterCreate(async (instance, options) => {
+    /* VERIFICATION MAIL WITH TWILIO SENDGRID */
+    const sendgridMsg = {
+      to: instance.email,
+      from: "diazlinggaputra@gmail.com",
+      subject: "RanChat Email Verification",
+      html: content(
+        instance.fullName.trim().split(" ")[0],
+        instance.verificationCode
+      ),
+    };
+    await sgMail.send(sendgridMsg);
+  });
   return User;
 };
