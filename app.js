@@ -47,6 +47,10 @@ const removeUser = (socketId) => {
   users = users.filter((user) => user.socketId !== socketId);
 };
 
+const removeUserLogout = (UserId) => {
+  users = users.filter((user) => user.userId !== UserId);
+};
+
 const getUser = (userId) => {
   return users.find((user) => user.userId === userId);
 };
@@ -57,7 +61,7 @@ io.on("connection", (socket) => {
   socket.on("adduser", (UserId) => {
     if (UserId) {
       addUser(UserId, socket.id);
-      console.log(users);
+      console.log(users, "online");
 
       io.emit("getUsers", users);
     }
@@ -78,6 +82,15 @@ io.on("connection", (socket) => {
       }
     }
   );
+
+  socket.on("removeUserLogout", (UserId) => {
+    if (UserId) {
+      removeUserLogout(UserId);
+      io.emit("getUsers", users);
+      console.log("a user disconnected!");
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
     removeUser(socket.id);

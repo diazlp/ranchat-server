@@ -29,7 +29,6 @@ class MessageController {
           imgUrl: response.data.url,
         });
       } else {
-        console.log(friendRoom);
         result = await db.collection("message").insertOne({
           roomFriendId: friendRoom,
           sender: id,
