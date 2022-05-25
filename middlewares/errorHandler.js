@@ -28,6 +28,7 @@ module.exports = (err, req, res, next) => {
       break;
 
     /* FRIENDS API ERROR SPECIFIC */
+    case "SequelizeForeignKeyConstraintError":
     case "UserNotFound":
       res.status(404).json({
         message: err.message,

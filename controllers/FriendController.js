@@ -11,7 +11,7 @@ class FriendController {
       const id = req.body.userId;
 
       //check if friendId is falsy
-      if (!friendId) {
+      if (!id) {
         throw {
           name: "CannotAddGuestAccount",
           message: "Cannot Add Guest Account",
@@ -19,12 +19,16 @@ class FriendController {
       }
       //check friendId is type guest/registeredUser
       const checkedUser = await User.findByPk(friendId);
-      if (!checkedUser) {
-        throw {
-          name: "UserNotFound",
-          message: "User not found",
-        };
-      }
+
+      //// INI DI COMMENT KARENA TESTING
+      // if (!checkedUser) {
+      //   throw {
+      //     name: "UserNotFound",
+      //     message: "User not found",
+      //   };
+      // }
+      /////
+
       //check if friend have sent friend request
       const findFriendRequest = await Friend.findOne({
         where: {
@@ -33,47 +37,6 @@ class FriendController {
           friendStatus: false,
         },
       });
-
-      // if (!findFriendRequest) {
-      //   //check if user has made same request before
-      //   const myRequest = await Friend.findOne({
-      //     where: {
-      //       UserId: id,
-      //       FriendId: friendId,
-      //     },
-      //   });
-      //   if (myRequest) {
-      //     throw {
-      //       name: "CannotDuplicateFriendRequest",
-      //       message: "Duplicate Friend Request",
-      //     };
-      //   } else {
-      //     //if no error & no duplicate friend request from each side
-      //     await Friend.create({
-      //       UserId: id,
-      //       FriendId: friendId,
-      //       friendStatus: false,
-      //     });
-      //   }
-      // }
-
-      // //update friend that has requested before
-      // await Friend.update(
-      //   { friendStatus: true },
-      //   {
-      //     where: {
-      //       UserId: friendId,
-      //       FriendId: id,
-      //     },
-      //   }
-      // );
-
-      // //create new row to add friend to friend list
-      // await Friend.create({
-      //   UserId: id,
-      //   FriendId: friendId,
-      //   friendStatus: true,
-      // });
 
       ///////////// NOTES : DIBALIK UNTUK KEPERLUAN TESTING //////////////
       if (findFriendRequest) {

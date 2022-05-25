@@ -26,8 +26,6 @@ const routes = require("./routes");
 
 app.use("/", routes);
 
-console.log("masuk sini kan!");
-
 app.use(errorHandler);
 
 module.exports = app;

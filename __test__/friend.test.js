@@ -1,6 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
-const { User } = require("../models");
+const { User, Friend } = require("../models");
 const { generateToken } = require("../helpers/jwt");
 
 let validToken;
@@ -42,7 +42,15 @@ beforeAll(async () => {
     },
   ];
 
-  await User.bulkCreate(data);
+  const users = await User.bulkCreate(data);
+
+  await Friend.create({
+    UserId: newUser.id,
+    FriendId: users[1].id,
+    friendStatus: false,
+  });
+
+  // console.log(users[1].id, "<");
 
   validToken = generateToken({
     id: newUser.id,
@@ -62,7 +70,7 @@ describe("Friend routes test", () => {
         .post("/friends")
         .set("access_token", validToken)
         .send({
-          friendId: 2,
+          userId: 2,
         });
 
       expect(response.status).toBe(201);
@@ -75,7 +83,7 @@ describe("Friend routes test", () => {
         .post("/friends")
         .set("access_token", invalidToken)
         .send({
-          friendId: 2,
+          userId: 2,
         });
 
       expect(response.status).toBe(401);
@@ -88,7 +96,7 @@ describe("Friend routes test", () => {
         .post("/friends")
         .set("access_token", validToken)
         .send({
-          friendId: 2,
+          userId: 2,
         });
 
       expect(response.status).toBe(400);
@@ -108,17 +116,30 @@ describe("Friend routes test", () => {
       expect(response.body).toBeInstanceOf(Object);
     });
 
-    test("should return status code 400 and friend id is not found", async () => {
+    test("should return status code 400 - should friend id is not found", async () => {
       const response = await request(app)
         .post("/friends")
         .set("access_token", validToken)
         .send({
-          friendId: 100,
+          userId: 100,
         });
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty("message");
       expect(response.body).toHaveProperty("message", expect.any(String));
+      expect(response.body).toBeInstanceOf(Object);
+    });
+
+    test("should return status code 201 - should user send friend request to the one that already sent them one", async () => {
+      const response = await request(app)
+        .post("/friends")
+        .set("access_token", validToken)
+        .send({
+          userId: 3,
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty("friend", expect.any(Object));
       expect(response.body).toBeInstanceOf(Object);
     });
   });
