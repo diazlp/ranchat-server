@@ -12,7 +12,6 @@ class MessageController {
       let result;
       const db = client.db("ranchat");
       let response;
-
       if (req.file) {
         const { buffer, originalname } = req.file;
         response = await imageKit(buffer, originalname);
@@ -30,6 +29,7 @@ class MessageController {
           imgUrl: response.data.url,
         });
       } else {
+        console.log(friendRoom);
         result = await db.collection("message").insertOne({
           roomFriendId: friendRoom,
           sender: id,
@@ -49,7 +49,6 @@ class MessageController {
         };
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
