@@ -125,6 +125,7 @@ class UserController {
       const { id } = req.user;
 
       const {
+        fullName,
         profilePicture,
         birthday,
         address,
@@ -146,18 +147,21 @@ class UserController {
       });
 
       if (userProfile) {
+        await User.update(
+          {
+            fullName,
+          },
+          {
+            where: { id },
+          }
+        );
         await Profile.update(
           {
             profilePicture,
             birthday,
             address,
-            gender,
             bio,
             banner,
-            facebook,
-            instagram,
-            twitter,
-            UserId: id,
           },
           {
             where: { UserId: id },
@@ -175,6 +179,14 @@ class UserController {
           twitter,
         });
       } else {
+        await User.create(
+          {
+            fullName,
+          },
+          {
+            where: { id },
+          }
+        );
         const profile = await Profile.create({
           profilePicture,
           birthday,

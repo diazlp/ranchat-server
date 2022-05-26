@@ -7,6 +7,8 @@
  * npx sequelize-cli db:create --env=test
  * npx sequelize-cli db:migrate --env=test
  *
+ * TO SEED ONE DATA AT A TIME
+ * npx sequelize-cli db:seed --seed < file-name >.js
  */
 
 if (process.env.NODE_ENV !== "production") {

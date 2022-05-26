@@ -22,6 +22,10 @@ const removeUser = (socketId) => {
   users = users.filter((user) => user.socketId !== socketId);
 };
 
+const removeUserLogout = (UserId) => {
+  users = users.filter((user) => user.userId !== UserId);
+};
+
 const getUser = (userId) => {
   return users.find((user) => user.userId === userId);
 };
@@ -58,28 +62,51 @@ io.on("connection", (socket) => {
   socket.on("adduser", (UserId) => {
     if (UserId) {
       addUser(UserId, socket.id);
+      console.log(users, "online");
+
       io.emit("getUsers", users);
     }
   });
 
   socket.on(
     "sendMessage",
+<<<<<<< HEAD
     ({ senderId, receiverId, text, friendRoom, photo }) => {
       const user = getUser(receiverId);
 
+=======
+    ({ senderId, receiverId, text, friendRoom, photo, type }) => {
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      const user = getUser(receiverId);
+      console.log(type);
+>>>>>>> safe-deploy-final
       if (user) {
         io.to(user.socketId).emit("getMessage", {
           friendRoom,
           senderId,
           text,
           photo,
+<<<<<<< HEAD
+        });
+      }
+=======
+          type,
         });
       }
     }
   );
 
+  socket.on("removeUserLogout", (UserId) => {
+    if (UserId) {
+      removeUserLogout(UserId);
+      io.emit("getUsers", users);
+      console.log("a user disconnected!");
+>>>>>>> safe-deploy-final
+    }
+  );
+
   socket.on("disconnect", () => {
-    // console.log("an user has disconnected!");
+    console.log("a user disconnected!");
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
