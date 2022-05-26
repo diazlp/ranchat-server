@@ -70,37 +70,16 @@ io.on("connection", (socket) => {
 
   socket.on(
     "sendMessage",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    ({ senderId, receiverId, text, friendRoom, photo }) => {
-      const user = getUser(receiverId);
-
-=======
-=======
->>>>>>> safe-deploy-final
     ({ senderId, receiverId, text, friendRoom, photo, type }) => {
       console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
       const user = getUser(receiverId);
       console.log(type);
-<<<<<<< HEAD
->>>>>>> safe-deploy-final
-=======
->>>>>>> safe-deploy-final
       if (user) {
         io.to(user.socketId).emit("getMessage", {
           friendRoom,
           senderId,
           text,
           photo,
-<<<<<<< HEAD
-<<<<<<< HEAD
-        });
-      }
-=======
-          type,
-        });
-      }
-=======
           type,
         });
       }
@@ -112,18 +91,8 @@ io.on("connection", (socket) => {
       removeUserLogout(UserId);
       io.emit("getUsers", users);
       console.log("a user disconnected!");
->>>>>>> safe-deploy-final
     }
-  );
-
-  socket.on("removeUserLogout", (UserId) => {
-    if (UserId) {
-      removeUserLogout(UserId);
-      io.emit("getUsers", users);
-      console.log("a user disconnected!");
->>>>>>> safe-deploy-final
-    }
-  );
+  });
 
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
