@@ -14,11 +14,11 @@ router.delete(
   MessageController.deleteRoomFriend
 ); //delete RoomFriend
 
-router.post(
-  "/addmessage",
-  upload.single("image"),
-  MessageController.addMessage
-); //add message
+// router.post(
+//   "/addmessage",
+//   upload.single("image"),
+//   MessageController.addMessage
+// ); //add message
 
 router.get("/findmessage/:roomfriendid", MessageController.findMessage); //find message
 // router.get("/findlastmessage/:friendid", MessageController.findLastMessage);

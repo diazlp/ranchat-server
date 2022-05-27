@@ -4,66 +4,66 @@ const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 class MessageController {
-  static async addMessage(req, res, next) {
-    try {
-      const { friendRoom, text, location } = req.body;
-      const { id } = req.user;
-      await client.connect();
-      let result;
-      const db = client.db("ranchat");
-      let response;
-      if (req.file) {
-        const { buffer, originalname } = req.file;
-        response = await imageKit(buffer, originalname);
+  // static async addMessage(req, res, next) {
+  //   try {
+  //     const { friendRoom, text, location } = req.body;
+  //     const { id } = req.user;
+  //     await client.connect();
+  //     let result;
+  //     const db = client.db("ranchat");
+  //     let response;
+  //     if (req.file) {
+  //       const { buffer, originalname } = req.file;
+  //       response = await imageKit(buffer, originalname);
 
-        result = await db.collection("message").insertOne({
-          roomFriendId: friendRoom,
-          sender: id,
-          text: null,
-          photo: response.data.url,
-          type: "image",
-          createdAt: new Date(),
-        });
-        res.status(200).json({
-          message: "Message added successfully.",
-          imgUrl: response.data.url,
-        });
-      } else if (location) {
-        result = await db.collection("message").insertOne({
-          roomFriendId: friendRoom,
-          sender: id,
-          text: location,
-          photo: null,
-          type: "location",
-          createdAt: new Date(),
-        });
-        res.status(200).json({
-          message: "Message added successfully.",
-          location,
-        });
-      } else {
-        result = await db.collection("message").insertOne({
-          roomFriendId: friendRoom,
-          sender: id,
-          text,
-          photo: null,
-          type: "text",
-          createdAt: new Date(),
-        });
-        res.status(200).json({
-          message: "Message added successfully.",
-        });
-      }
-      if (!result) {
-        throw {
-          name: "AddMessageFailed",
-          message: "Failed to add message to the database",
-        };
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
+  //       result = await db.collection("message").insertOne({
+  //         roomFriendId: friendRoom,
+  //         sender: id,
+  //         text: null,
+  //         photo: response.data.url,
+  //         type: "image",
+  //         createdAt: new Date(),
+  //       });
+  //       res.status(200).json({
+  //         message: "Message added successfully.",
+  //         imgUrl: response.data.url,
+  //       });
+  //     } else if (location) {
+  //       result = await db.collection("message").insertOne({
+  //         roomFriendId: friendRoom,
+  //         sender: id,
+  //         text: location,
+  //         photo: null,
+  //         type: "location",
+  //         createdAt: new Date(),
+  //       });
+  //       res.status(200).json({
+  //         message: "Message added successfully.",
+  //         location,
+  //       });
+  //     } else {
+  //       result = await db.collection("message").insertOne({
+  //         roomFriendId: friendRoom,
+  //         sender: id,
+  //         text,
+  //         photo: null,
+  //         type: "text",
+  //         createdAt: new Date(),
+  //       });
+  //       res.status(200).json({
+  //         message: "Message added successfully.",
+  //       });
+  //     }
+  //     if (!result) {
+  //       throw {
+  //         name: "AddMessageFailed",
+  //         message: "Failed to add message to the database",
+  //       };
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
   static async findMessage(req, res, next) {
     try {
       const { roomfriendid } = req.params;
