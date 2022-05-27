@@ -32,91 +32,109 @@ app.use(errorHandler);
 
 module.exports = app;
 
-// INI SEMUA DIPINDAH YAAA, UNTUK TESTING
-// const http = require("http");
-// const { Server } = require("socket.io");
+const http = require("http");
+const { Server } = require("socket.io");
 
-// const server = http.createServer(app);
+const server = http.createServer(app);
 
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*",
-//     credentials: true,
-//     methods: ["GET", "POST"],
-//   },
-// });
-
-////////////// NOTES: NGERJAIN SOCKET IO DARI socketConfig.js ya
-//* Ini function buat socket io
-// let users = [];
-
-// const addUser = (userId, socketId) => {
-//   !users.some((user) => user.userId === userId) &&
-//     users.push({ userId, socketId });
-// };
-
-// const removeUser = (socketId) => {
-//   users = users.filter((user) => user.socketId !== socketId);
-// };
-
-// const getUser = (userId) => {
-//   return users.find((user) => user.userId === userId);
-// };
-////
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    credentials: true,
+    methods: ["GET", "POST"],
+  },
+});
 
 /* INI BUAT BROADCAST KE SELURUH USER */
-// io.on("connection", (socket) => {
-//   socket.emit("me", socket.id);
+let users = [];
 
-//   // FRIEND FEATURE (KEVIN)
-//   socket.on("friendRequest", (payload) => {
-//     // console.log("masuk receive friend Request");
-//     socket.to(payload.receiverId).emit("createfriendRequest", payload.userId);
-//   });
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
 
-//   // RANDOM CHAT (KEVIN)
-//   socket.on("send_message", (data) => {
-//     socket.broadcast.emit("receive_message", data);
-//   }); //dummypage
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
 
-//   socket.on("sendMessageFromVideo", (payload) => {
-//     // console.log(payload);
-//     socket.to(payload.receiver).emit("receiveMessageFromVideo", payload);
-//   }); // send chat videoPage
+const removeUserLogout = (UserId) => {
+  users = users.filter((user) => user.userId !== UserId);
+};
 
-//   socket.on("calluser", ({ userToCall, signalData, from, name }) => {
-//     socket.to(userToCall).emit("calluser", { signal: signalData, from, name });
-//   });
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
+/////
 
-//   socket.on("answercall", (data) => {
-//     socket.to(data.to).emit("callaccepted", data.signal);
-//   });
+io.on("connection", (socket) => {
+  socket.emit("me", socket.id);
 
-//   // FRIEND CHAT (FITRAH)
-//   socket.on("adduser", (UserId) => {
-//     if (UserId) {
-//       addUser(UserId, socket.id);
-//       io.emit("getUsers", users);
-//     }
-//   });
+  // FRIEND FEATURE (KEVIN)
+  socket.on("friendRequest", (payload) => {
+    // console.log("masuk receive friend Request");
+    socket.to(payload.receiverId).emit("createfriendRequest", payload.userId);
+  });
 
-//   socket.on("sendMessage", ({ senderId, receiverId, text, friendRoom }) => {
-//     const user = getUser(receiverId);
-//     if (user) {
-//       io.to(user.socketId).emit("getMessage", {
-//         friendRoom,
-//         senderId,
-//         text,
-//       });
-//     }
-//   });
+  // RANDOM CHAT (KEVIN)
+  socket.on("send_message", (data) => {
+    socket.broadcast.emit("receive_message", data);
+  }); //dummypage
 
-//   socket.on("disconnect", () => {
-//     // console.log("an user has disconnected!");
-//     removeUser(socket.id);
-//     io.emit("getUsers", users);
-//   });
-// });
+  socket.on("sendMessageFromVideo", (payload) => {
+    // console.log(payload);
+    socket.to(payload.receiver).emit("receiveMessageFromVideo", payload);
+  }); // send chat videoPage
+
+  socket.on("calluser", ({ userToCall, signalData, from, name }) => {
+    socket.to(userToCall).emit("calluser", { signal: signalData, from, name });
+  });
+
+  socket.on("answercall", (data) => {
+    socket.to(data.to).emit("callaccepted", data.signal);
+  });
+
+  // FRIEND CHAT (FITRAH)
+  socket.on("adduser", (UserId) => {
+    if (UserId) {
+      addUser(UserId, socket.id);
+      console.log(users, "online");
+
+      io.emit("getUsers", users);
+    }
+  });
+
+  socket.on(
+    "sendMessage",
+    ({ senderId, receiverId, text, friendRoom, photo, type }) => {
+      console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      const user = getUser(receiverId);
+      console.log(type);
+      if (user) {
+        io.to(user.socketId).emit("getMessage", {
+          friendRoom,
+          senderId,
+          text,
+          photo,
+          type,
+        });
+      }
+    }
+  );
+
+  socket.on("removeUserLogout", (UserId) => {
+    if (UserId) {
+      removeUserLogout(UserId);
+      io.emit("getUsers", users);
+      console.log("a user disconnected!");
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log("a user disconnected!");
+    removeUser(socket.id);
+    io.emit("getUsers", users);
+  });
+});
 ////////
 
 /* INI BUAT JOIN ROOM DAN SEND MESSAGE KE PRIVATE ROOM */
@@ -140,3 +158,4 @@ module.exports = app;
 //   ChatController.videoCallRequest(chat, socket);
 //   ChatController.answerCall(chat, socket);
 // });
+module.exports = { app, server };
