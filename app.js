@@ -40,13 +40,12 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
-    credentials: true,
     methods: ["GET", "POST"],
-    "Access-Control-Allow-Origin": "*",
+    credentials: true,
   },
 });
 
-io.set("transports", ["websocket"]);
+io.set("transports", ["websocket", "polling"]);
 
 // const io = new Server(server, {
 //   cors: {
