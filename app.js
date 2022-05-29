@@ -39,13 +39,19 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "https://ranchat-app.herokuapp.com",
     methods: ["GET", "POST"],
     credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "Origin",
+      "X-Requested-With",
+      "Access-Control-Allow-Origin",
+    ],
   },
 });
-
-io.set("transports", ["websocket", "polling"]);
 
 // const io = new Server(server, {
 //   cors: {
