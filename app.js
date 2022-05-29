@@ -164,6 +164,7 @@ io.on("connection", (socket) => {
 //   });
 // });
 
+/* DIBAWAH INI ADALAH CODINGAN UNTUK MENAMBAHKAN ENDPOINT (BUGGY) */
 // const ChatController = require("./controllers/ChatController");
 // const chat = io.of("/chat").on("connection", function (socket) {
 //   socket.emit("me", socket.id);
