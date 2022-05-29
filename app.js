@@ -46,6 +46,8 @@ const io = new Server(server, {
   },
 });
 
+io.set("transports", ["websocket"]);
+
 // const io = new Server(server, {
 //   cors: {
 //     origin: "*",
