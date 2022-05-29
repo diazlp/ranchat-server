@@ -6,8 +6,17 @@ const server = require("./bin/http");
 const io = new Server(server, {
   cors: {
     origin: "*",
-    credentials: true,
     methods: ["GET", "POST"],
+    credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "Origin",
+      "X-Requested-With",
+      "Access-Control-Allow-Origin",
+    ],
+    transports: ["websocket"],
   },
 });
 
