@@ -50,6 +50,7 @@ const io = new Server(server, {
       "X-Requested-With",
       "Access-Control-Allow-Origin",
     ],
+    transports: ["websocket", "polling"],
   },
 });
 

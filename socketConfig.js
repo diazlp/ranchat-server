@@ -11,8 +11,6 @@ const io = new Server(server, {
   },
 });
 
-io.set("transports", ["websocket"]);
-
 let users = [];
 
 const addUser = (userId, socketId) => {
