@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "npx jest --coverage --forceExit --runInBand --testTimeout=60000 --verbose",
-    "dev": "nodemon server",
-    "dev2": "nodemon bin/www",
+    "dev": "nodemon bin/www",
+    "dev2": "nodemon server",
     "dev3": "nodemon bin/http",
-    "start": "node server"
+    "start": "node bin/www"
   },
   "keywords": [],
   "author": "",
