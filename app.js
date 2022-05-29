@@ -39,9 +39,10 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://ranchat-app.herokuapp.com",
+    origin: "*",
     credentials: true,
     methods: ["GET", "POST"],
+    "Access-Control-Allow-Origin": "*",
   },
 });
 
@@ -165,4 +166,7 @@ io.on("connection", (socket) => {
 //   ChatController.videoCallRequest(chat, socket);
 //   ChatController.answerCall(chat, socket);
 // });
-module.exports = { app, server };
+const port = process.env.PORT || 4001;
+server.listen(port, () => {
+  console.log(`App server is running on port ${port}`);
+});
