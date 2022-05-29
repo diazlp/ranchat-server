@@ -174,7 +174,5 @@ io.on("connection", (socket) => {
 //   ChatController.videoCallRequest(chat, socket);
 //   ChatController.answerCall(chat, socket);
 // });
-const port = process.env.PORT || 4001;
-server.listen(port, () => {
-  console.log(`App server is running on port ${port}`);
-});
+
+module.exports = { app, server };
